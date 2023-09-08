@@ -1,5 +1,5 @@
 # Тут будет запуск нашей программы
-from data.base.mainwindow import render
+from data.base.mainwindow import MainWindow
 
-render()
+MainWindow.render_window()
 
