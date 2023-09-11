@@ -1,12 +1,10 @@
-# Файл, который запустит наше окно
+# Создание основного окна
 import sys
-
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout
-from .WidgetsClass import TopToolbar, MenuLayout
-
-
 # import pyqtgraph as pg
-# import matplotlib
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout
+from data.base.widgets.MenuLayout import MenuLayout
+from data.base.widgets.TopToolbar import TopToolbar
+
 
 class MainWindow(QMainWindow):
     def __init__(self, win_w, win_h):
@@ -33,7 +31,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     @staticmethod
-    def render_window(**kwargs):
+    def render_main_win():
         app = QApplication(sys.argv)
 
         window = MainWindow(1080, 720)
