@@ -2,6 +2,8 @@
 import sys
 # import pyqtgraph as pg
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout
+
+from data.base.widgets.MathLayout import MathLayout
 from data.base.widgets.MenuLayout import MenuLayout
 from data.base.widgets.TopToolbar import TopToolbar
 
@@ -21,14 +23,17 @@ class MainWindow(QMainWindow):
         self.addToolBar(TopToolbar())
 
         # Разбиение окна
-        up_layout = QGridLayout()
-        main_layout = MenuLayout()
+        up_layout = QGridLayout()  # Делит окно на асти
+        menu_layout = MenuLayout()  # Часть окна с конфигом
+        graph_layout = MathLayout()
 
-        up_layout.addLayout(main_layout, 0, 2)
+        up_layout.addLayout(graph_layout, 0, 0)
+        up_layout.addLayout(menu_layout, 0, 2)
 
-        widget = QWidget()
-        widget.setLayout(up_layout)
-        self.setCentralWidget(widget)
+        main_widget = QWidget()
+        main_widget.setLayout(up_layout)
+        self.setCentralWidget(main_widget)
+
 
     @staticmethod
     def render_main_win():
