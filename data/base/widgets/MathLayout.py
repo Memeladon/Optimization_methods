@@ -1,8 +1,8 @@
-from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QVBoxLayout
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
+from PyQt6.QtWidgets import QVBoxLayout
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from data.Functions.Himmelblau import himmelblau
 
 
 class MathLayout(QVBoxLayout):
@@ -11,19 +11,16 @@ class MathLayout(QVBoxLayout):
         # Создание сетки и задание основы графика
         fig = Figure()
         canvas = FigureCanvas(fig)
-        axes = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(111, projection='3d')
+
+        canvas.mpl_connect('button_press_event', ax._button_press)
+        canvas.mpl_connect('button_release_event', ax._button_release)
+        canvas.mpl_connect('motion_notify_event', ax._on_move)
 
         self.addWidget(canvas)
 
         # Выбор/задание функции
-        X = np.arange(-5, 5, 0.25)
-        Y = np.arange(-5, 5, 0.25)
-        X, Y = np.meshgrid(X, Y)
-        R = np.sqrt(X ** 2 + Y ** 2)
-        Z = np.sin(R)
+        X, Y, Z = himmelblau()
 
         # Отрисовка
-        axes.plot_surface(X, Y, Z)
-
-
-
+        ax.plot_surface(X, Y, Z, cmap='jet')

@@ -14,7 +14,6 @@ class MenuLayout(QVBoxLayout):
         choose_algorithm = QComboBox()
         choose_algorithm.addItems(algorithms)
         choose_algorithm.currentIndexChanged.connect(self.index_changed)
-        choose_algorithm.currentTextChanged.connect(self.text_changed)
 
         self.addWidget(choose_algorithm)
 
@@ -23,7 +22,6 @@ class MenuLayout(QVBoxLayout):
         choose_methods = QComboBox()
         choose_methods.addItems(methods)
         choose_methods.currentIndexChanged.connect(self.index_changed)
-        choose_methods.currentTextChanged.connect(self.text_changed)
 
         self.addWidget(choose_methods)
 
@@ -43,10 +41,11 @@ class MenuLayout(QVBoxLayout):
     def the_button_was_clicked(self):
         print("Clicked!")
 
-    def index_changed(self, i):  # i is an int
-        print(i)
+    def index_changed(self, index):  # i is an int
+        print(index)
+        # if index == 1:
+            
 
-    def text_changed(self, s):  # s is a str
-        print(s)
+
 
 
