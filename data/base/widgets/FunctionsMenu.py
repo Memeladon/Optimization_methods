@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QComboBox, QPushButton, QLabel, QLineEdit, QHBoxLayout
+from PyQt6.QtWidgets import QVBoxLayout, QComboBox, QLabel, QLineEdit, QHBoxLayout
 
 
 class FunctionsMenu(QVBoxLayout):
@@ -9,63 +9,63 @@ class FunctionsMenu(QVBoxLayout):
 
         # ---------------- ComboBox ---------------- #
         methods = ["Функция Химмельблау", "2", "3", "4", "5", "6", "7", "8"]
-        choose_methods = QComboBox()
-        choose_methods.addItems(methods)
-        choose_methods.currentIndexChanged.connect(self.index_changed)
+        self.choose_methods = QComboBox()
+        self.choose_methods.addItems(methods)
+        self.choose_methods.currentIndexChanged.connect(self.function_changed)
 
-        self.addWidget(choose_methods)
+        self.addWidget(self.choose_methods)
 
-        # ---------------- Label ---------------- #
+        # ----------------- Label ----------------- #
         # Разбиение на название - значение
         horizontal_layout = QHBoxLayout()
         vertical_layout_left = QVBoxLayout()
         vertical_layout_right = QVBoxLayout()
 
         # (X0;X1)
-        label_x = QLabel('&X интервал')
-        label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEditX = QLineEdit()
-        lineEditX.textChanged[str].connect(self.Changed)
-        label_x.setBuddy(lineEditX)
+        self.label_x = QLabel('&X интервал')
+        self.label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEditX = QLineEdit('(-5;5)')
+        self.lineEditX.textChanged[str].connect(self.changed_intervals)
+        self.label_x.setBuddy(self.lineEditX)
 
         # (Y0;Y1)
-        label_y = QLabel('&Y интервал')
-        label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEditY = QLineEdit()
-        lineEditY.textChanged[str].connect(self.Changed)
-        label_y.setBuddy(lineEditY)
+        self.label_y = QLabel('&Y интервал')
+        self.label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEditY = QLineEdit('(-5;5)')
+        self.lineEditY.textChanged[str].connect(self.changed_intervals)
+        self.label_y.setBuddy(self.lineEditY)
 
         # Z МАСШТАБ
-        label_z = QLabel('&Z масштаб')
-        label_z.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEditZ = QLineEdit()
-        lineEditZ.textChanged[str].connect(self.Changed)
-        label_z.setBuddy(lineEditZ)
+        self.label_z = QLabel('&Z масштаб')
+        self.label_z.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEditZ = QLineEdit('1')
+        self.lineEditZ.textChanged[str].connect(self.changed_scale)
+        self.label_z.setBuddy(self.lineEditZ)
 
         # # ОСЬ
         # label_osx = QLabel('&Ось X интервал')
         # label_osx.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         # lineEditOSX = QLineEdit()
-        # lineEditOSX.textChanged[str].connect(self.Changed)
+        # lineEditOSX.textChanged[str].connect(self.changed_intervals)
         # label_osx.setBuddy(lineEditOSX)
         #
         # # ОСЬ
         # label_osy = QLabel('&Ось Y интервал')
         # label_osy.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         # lineEditOSY = QLineEdit()
-        # lineEditOSY.textChanged[str].connect(self.Changed)
+        # lineEditOSY.textChanged[str].connect(self.changed_intervals)
         # label_osy.setBuddy(lineEditOSY)
 
         # Запихиваем в layout
-        vertical_layout_left.addWidget(label_x)
-        vertical_layout_left.addWidget(label_y)
-        vertical_layout_left.addWidget(label_z)
+        vertical_layout_left.addWidget(self.label_x)
+        vertical_layout_left.addWidget(self.label_y)
+        vertical_layout_left.addWidget(self.label_z)
         # vertical_layout_left.addWidget(label_osx)
         # vertical_layout_left.addWidget(label_osy)
 
-        vertical_layout_right.addWidget(lineEditX)
-        vertical_layout_right.addWidget(lineEditY)
-        vertical_layout_right.addWidget(lineEditZ)
+        vertical_layout_right.addWidget(self.lineEditX)
+        vertical_layout_right.addWidget(self.lineEditY)
+        vertical_layout_right.addWidget(self.lineEditZ)
         # vertical_layout_right.addWidget(lineEditOSX)
         # vertical_layout_right.addWidget(lineEditOSY)
 
@@ -74,13 +74,16 @@ class FunctionsMenu(QVBoxLayout):
 
         self.addLayout(horizontal_layout)
 
-    def index_changed(self, index):  # i is an int
+    def function_changed(self, index):  # i is an int
         print(index)
-        # if index == 1:
-            
-    def Changed(self, changed_info):
-        print(changed_info)
+        # if index == 0:
+        #
 
+    def changed_intervals(self, changed_info):
+        clear = changed_info.replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+        xs = clear.split()
+        print(xs)
 
-
-
+    def changed_scale(self, changed_info):
+        clear = changed_info.replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+        print(clear)

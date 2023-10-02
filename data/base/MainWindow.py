@@ -20,10 +20,6 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('data/images/app.png'))
         self.setGeometry(100, 100, win_w, win_h)
 
-
-        # Задержка вывода работы алгоритма для пользователя
-        self.output_interval = 0.1
-
         # Верхнее меню приложения
         self.addToolBar(TopToolbar())
 
@@ -33,17 +29,17 @@ class MainWindow(QMainWindow):
         left_layout = MathLayout()  # Левая чать окна (часть окна с графиком)
 
         # Задается правая часть (Меню)
-        menu_layout = FunctionsMenu()
+        functions_menu = FunctionsMenu()
         algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
 
         right_layout.addLayout(algorithm_menu)
-        right_layout.addLayout(menu_layout)
+        right_layout.addLayout(functions_menu)
 
         # Добавление частей в окно
         main_layout.addLayout(left_layout, 0, 0)
         main_layout.addLayout(right_layout, 0, 1)
 
-        # menu_layout.index_changed()
+        # functions_menu.function_changed()
 
         main_widget = QWidget()
         main_widget.setLayout(main_layout)

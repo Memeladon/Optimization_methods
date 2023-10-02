@@ -13,7 +13,7 @@ class AlgorithmMenu(QVBoxLayout):
                       "Бактериальная оптимизация", "Гибридный алгоритм"]
         choose_algorithm = QComboBox()
         choose_algorithm.addItems(algorithms)
-        choose_algorithm.currentIndexChanged.connect(self.index_changed)
+        choose_algorithm.currentIndexChanged.connect(self.algorithm_changed)
 
         self.addWidget(choose_algorithm)
 
@@ -24,52 +24,52 @@ class AlgorithmMenu(QVBoxLayout):
         vertical_layout_right = QVBoxLayout()
 
         # X
-        label_x = QLabel('&X')
-        label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEditX = QLineEdit()
-        lineEditX.textChanged[str].connect(self.Changed)
-        label_x.setBuddy(lineEditX)
+        self.label_x = QLabel('&X')
+        self.label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEditX = QLineEdit()
+        self.lineEditX.textChanged[str].connect(self.changed)
+        self.label_x.setBuddy(self.lineEditX)
 
         # Y
-        label_y = QLabel('&Y')
-        label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEditY = QLineEdit()
-        lineEditY.textChanged[str].connect(self.Changed)
-        label_y.setBuddy(lineEditY)
+        self.label_y = QLabel('&Y')
+        self.label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEditY = QLineEdit()
+        self.lineEditY.textChanged[str].connect(self.changed)
+        self.label_y.setBuddy(self.lineEditY)
 
         # НАЧАЛЬНЫЙ ШАГ
-        label_first_step = QLabel('&Начальный шаг')
-        label_first_step.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEdit_first_step = QLineEdit()
-        lineEdit_first_step.textChanged[str].connect(self.Changed)
-        label_first_step.setBuddy(lineEdit_first_step)
+        self.label_first_step = QLabel('&Начальный шаг')
+        self.label_first_step.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEdit_first_step = QLineEdit()
+        self.lineEdit_first_step.textChanged[str].connect(self.changed)
+        self.label_first_step.setBuddy(self.lineEdit_first_step)
 
         # ЧИСЛО ИТЕРАЦИЙ
-        label_iterations = QLabel('&Число итераций')
-        label_iterations.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEdit_iterations = QLineEdit()
-        lineEdit_iterations.textChanged[str].connect(self.Changed)
-        label_iterations.setBuddy(lineEdit_iterations)
+        self.label_iterations = QLabel('&Число итераций')
+        self.label_iterations.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEdit_iterations = QLineEdit()
+        self.lineEdit_iterations.textChanged[str].connect(self.changed)
+        self.label_iterations.setBuddy(self.lineEdit_iterations)
 
         # ЗАДЕРЖКА
-        label_delay = QLabel('&Задержка')
-        label_delay.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        lineEdit_delay = QLineEdit()
-        lineEdit_delay.textChanged[str].connect(self.Changed)
-        label_delay.setBuddy(lineEdit_delay)
+        self.label_delay = QLabel('&Задержка')
+        self.label_delay.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEdit_delay = QLineEdit()
+        self.lineEdit_delay.textChanged[str].connect(self.changed)
+        self.label_delay.setBuddy(self.lineEdit_delay)
 
         # Запихиваем в layout
-        vertical_layout_left.addWidget(label_x)
-        vertical_layout_left.addWidget(label_y)
-        vertical_layout_left.addWidget(label_first_step)
-        vertical_layout_left.addWidget(label_iterations)
-        vertical_layout_left.addWidget(label_delay)
+        vertical_layout_left.addWidget(self.label_x)
+        vertical_layout_left.addWidget(self.label_y)
+        vertical_layout_left.addWidget(self.label_first_step)
+        vertical_layout_left.addWidget(self.label_iterations)
+        vertical_layout_left.addWidget(self.label_delay)
 
-        vertical_layout_right.addWidget(lineEditX)
-        vertical_layout_right.addWidget(lineEditY)
-        vertical_layout_right.addWidget(lineEdit_first_step)
-        vertical_layout_right.addWidget(lineEdit_iterations)
-        vertical_layout_right.addWidget(lineEdit_delay)
+        vertical_layout_right.addWidget(self.lineEditX)
+        vertical_layout_right.addWidget(self.lineEditY)
+        vertical_layout_right.addWidget(self.lineEdit_first_step)
+        vertical_layout_right.addWidget(self.lineEdit_iterations)
+        vertical_layout_right.addWidget(self.lineEdit_delay)
 
         horizontal_layout.addLayout(vertical_layout_left)
         horizontal_layout.addLayout(vertical_layout_right)
@@ -91,13 +91,15 @@ class AlgorithmMenu(QVBoxLayout):
 
         self.addWidget(self.console)
 
-    def index_changed(self, index):  # i is an int
+    def algorithm_changed(self, index):  # i is an int
         print('changed to' + str(index))
         # if index == 1:
 
-    def Changed(self, changed_info):
-        print(changed_info)
+    def changed(self, changed_info):
+        clear = changed_info.replace(' ', '')
+        print(clear)
 
+    # Консольные функции
     def message(self, s):
         self.console.appendPlainText(s)
 
