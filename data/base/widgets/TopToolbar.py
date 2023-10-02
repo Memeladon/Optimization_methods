@@ -10,16 +10,16 @@ class TopToolbar(QToolBar):
         self.setIconSize(QSize(16, 16))
         self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 
-        button_action = QAction(QIcon("data/images/icon.png"), "&Your button", self)
-        button_action.setStatusTip("This is your button")
+        button_action = QAction(QIcon("data/images/settings.png"), "&Настройки", self)
+        button_action.setStatusTip("Настройки программы")
         button_action.triggered.connect(self.onMyToolBarButtonClick)
         button_action.setCheckable(True)
 
         self.addAction(button_action)
         self.addSeparator()
 
-        button_action2 = QAction(QIcon("data/images/icon.png"), "&Your button", self)
-        button_action2.setStatusTip("This is your button")
+        button_action2 = QAction(QIcon("data/images/settings.png"), "&Документация", self)
+        button_action2.setStatusTip("Информация про функции и методы")
         button_action2.triggered.connect(self.onMyToolBarButtonClick)
         button_action2.setCheckable(True)
 

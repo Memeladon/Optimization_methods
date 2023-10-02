@@ -1,10 +1,13 @@
 # Создание основного окна
 import sys
 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout
+from PyQt6 import QtGui
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QVBoxLayout
+
 # Импорт виджетов
+from data.base.widgets.AlgorithmMenu import AlgorithmMenu
+from data.base.widgets.FunctionsMenu import FunctionsMenu
 from data.base.widgets.MathLayout import MathLayout
-from data.base.widgets.MenuLayout import MenuLayout
 from data.base.widgets.TopToolbar import TopToolbar
 
 
@@ -14,7 +17,9 @@ class MainWindow(QMainWindow):
 
         # Установка названия окна, иконки и размеров
         self.setWindowTitle("Оптимизационные методы")
+        self.setWindowIcon(QtGui.QIcon('data/images/app.png'))
         self.setGeometry(100, 100, win_w, win_h)
+
 
         # Задержка вывода работы алгоритма для пользователя
         self.output_interval = 0.1
@@ -23,17 +28,25 @@ class MainWindow(QMainWindow):
         self.addToolBar(TopToolbar())
 
         # Разбиение окна
-        up_layout = QGridLayout()  # Делит окно на части
-        menu_layout = MenuLayout()  # Часть окна с конфигом
-        graph_layout = MathLayout()  # Часть окна с графиком
+        main_layout = QGridLayout()  # Делит окно на части (в нашем случае на 2)
+        right_layout = QVBoxLayout()  # Правая часть окна
+        left_layout = MathLayout()  # Левая чать окна (часть окна с графиком)
 
-        up_layout.addLayout(graph_layout, 0, 0)
-        up_layout.addLayout(menu_layout, 0, 2)
+        # Задается правая часть (Меню)
+        menu_layout = FunctionsMenu()
+        algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
+
+        right_layout.addLayout(algorithm_menu)
+        right_layout.addLayout(menu_layout)
+
+        # Добавление частей в окно
+        main_layout.addLayout(left_layout, 0, 0)
+        main_layout.addLayout(right_layout, 0, 1)
 
         # menu_layout.index_changed()
 
         main_widget = QWidget()
-        main_widget.setLayout(up_layout)
+        main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
 
     @staticmethod
