@@ -25,14 +25,14 @@ class FunctionsMenu(QVBoxLayout):
         self.label_x = QLabel('&X интервал')
         self.label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.lineEditX = QLineEdit('(-5;5)')
-        self.lineEditX.textChanged[str].connect(self.changed_intervals)
+        self.lineEditX.textChanged[str].connect(self.x_changed_intervals)
         self.label_x.setBuddy(self.lineEditX)
 
         # (Y0;Y1)
         self.label_y = QLabel('&Y интервал')
         self.label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.lineEditY = QLineEdit('(-5;5)')
-        self.lineEditY.textChanged[str].connect(self.changed_intervals)
+        self.lineEditY.textChanged[str].connect(self.y_changed_intervals)
         self.label_y.setBuddy(self.lineEditY)
 
         # Z МАСШТАБ
@@ -74,16 +74,28 @@ class FunctionsMenu(QVBoxLayout):
 
         self.addLayout(horizontal_layout)
 
+    # Функция обрабатывающая выбор функций
     def function_changed(self, index):  # i is an int
         print(index)
         # if index == 0:
         #
 
-    def changed_intervals(self, changed_info):
-        clear = changed_info.replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+    # Функция обрабатывающая изменения в строке функций (Интервал Х)
+    def x_changed_intervals(self):
+        clear = self.lineEditX.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
         xs = clear.split()
-        print(xs)
+        print('X интервал:' + str(xs))
+        return xs
 
-    def changed_scale(self, changed_info):
-        clear = changed_info.replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+    # Функция обрабатывающая изменения в строке функций (Интервал Y)
+    def y_changed_intervals(self):
+        clear = self.lineEditX.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+        ys = clear.split()
+        print('Y интервал:' + str(ys))
+        return ys
+
+    # Функция обрабатывающая изменения в строке функций (Масштаб Z)
+    def changed_scale(self):
+        clear = self.lineEditZ.text().replace(' ', '').replace(';', ' ')
         print(clear)
+        return clear

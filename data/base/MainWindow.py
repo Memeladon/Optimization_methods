@@ -26,11 +26,15 @@ class MainWindow(QMainWindow):
         # Разбиение окна
         main_layout = QGridLayout()  # Делит окно на части (в нашем случае на 2)
         right_layout = QVBoxLayout()  # Правая часть окна
-        left_layout = MathLayout()  # Левая чать окна (часть окна с графиком)
 
         # Задается правая часть (Меню)
         functions_menu = FunctionsMenu()
         algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
+
+        # Левая чать окна (часть окна с графиком)
+        left_layout = MathLayout(functions_menu.x_changed_intervals(),
+                                 functions_menu.y_changed_intervals(),
+                                 functions_menu.changed_scale())
 
         right_layout.addLayout(algorithm_menu)
         right_layout.addLayout(functions_menu)
@@ -44,6 +48,10 @@ class MainWindow(QMainWindow):
         main_widget = QWidget()
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
+
+    def update_math(self):
+        sender = self.sender()
+        self.statusBar().showMessage(sender.text() + ' was pressed')
 
     @staticmethod
     def render_main_win():

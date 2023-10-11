@@ -26,35 +26,35 @@ class AlgorithmMenu(QVBoxLayout):
         # X
         self.label_x = QLabel('&X')
         self.label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEditX = QLineEdit()
-        self.lineEditX.textChanged[str].connect(self.changed)
+        self.lineEditX = QLineEdit('-1')
+        self.lineEditX.textChanged[str].connect(self.x_alg)
         self.label_x.setBuddy(self.lineEditX)
 
         # Y
         self.label_y = QLabel('&Y')
         self.label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEditY = QLineEdit()
-        self.lineEditY.textChanged[str].connect(self.changed)
+        self.lineEditY = QLineEdit('-1')
+        self.lineEditY.textChanged[str].connect(self.y_alg)
         self.label_y.setBuddy(self.lineEditY)
 
         # НАЧАЛЬНЫЙ ШАГ
         self.label_first_step = QLabel('&Начальный шаг')
         self.label_first_step.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEdit_first_step = QLineEdit()
-        self.lineEdit_first_step.textChanged[str].connect(self.changed)
+        self.lineEdit_first_step = QLineEdit('0.5')
+        self.lineEdit_first_step.textChanged[str].connect(self.step_alg)
         self.label_first_step.setBuddy(self.lineEdit_first_step)
 
         # ЧИСЛО ИТЕРАЦИЙ
         self.label_iterations = QLabel('&Число итераций')
         self.label_iterations.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEdit_iterations = QLineEdit()
-        self.lineEdit_iterations.textChanged[str].connect(self.changed)
+        self.lineEdit_iterations = QLineEdit('100')
+        self.lineEdit_iterations.textChanged[str].connect(self.iter_alg)
         self.label_iterations.setBuddy(self.lineEdit_iterations)
 
         # ЗАДЕРЖКА
         self.label_delay = QLabel('&Задержка')
         self.label_delay.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEdit_delay = QLineEdit()
+        self.lineEdit_delay = QLineEdit('0.5')
         self.lineEdit_delay.textChanged[str].connect(self.changed)
         self.label_delay.setBuddy(self.lineEdit_delay)
 
@@ -84,16 +84,17 @@ class AlgorithmMenu(QVBoxLayout):
         self.addWidget(self.start_button)
 
         # --------------- Console --------------- #
-        self.p = None  # Значение текущего процесса
+        self.process = None  # Значение текущего процесса
 
         self.console = QPlainTextEdit()
         self.console.setReadOnly(True)
 
         self.addWidget(self.console)
 
+    # Функция обрабатывающая выбор алгоритмов
     def algorithm_changed(self, index):  # i is an int
         print('changed to' + str(index))
-        # if index == 1:
+        # if index == 0:
 
     def changed(self, changed_info):
         clear = changed_info.replace(' ', '')
@@ -104,12 +105,44 @@ class AlgorithmMenu(QVBoxLayout):
         self.console.appendPlainText(s)
 
     def start_process(self):
-        if self.p is None:  # Если текущего процесса нет.
+        if self.process is None:  # Если текущего процесса нет.
             self.message("Executing process")
-            self.p = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
-            self.p.finished.connect(self.process_finished)  # Очистка процесса.
-            self.p.start("python3", ['ourscript.py'])
+            self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
+            self.process.finished.connect(self.process_finished)  # Очистка процесса.
+            self.process.start("python3", ['gradient_descent.py'])
 
     def process_finished(self):
         self.message("Process finished.")
-        self.p = None
+        self.process = None
+
+    # Функция обрабатывающая изменения в строке алгоритмов (X)
+    def x_alg(self):
+        clear = self.lineEditX.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+        xs = clear.split()
+        print('X:' + str(xs))
+        return xs
+
+    # Функция обрабатывающая изменения в строке алгоритмов (Y)
+    def y_alg(self):
+        clear = self.lineEditY.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+        ys = clear.split()
+        print('Y:' + str(ys))
+        return ys
+
+    # Функция обрабатывающая изменения в строке алгоритмов (Steps)
+    def step_alg(self):
+        clear = self.lineEdit_first_step.text().replace(' ', '').replace(',', '.')
+        print('Начальный шаг:' + str(clear))
+        return clear
+
+    # Функция обрабатывающая изменения в строке алгоритмов (Iterations)
+    def iter_alg(self):
+        clear = self.lineEdit_iterations.text().replace(' ', '')
+        print('Число итераций:' + str(clear))
+        return clear
+
+    # Функция обрабатывающая изменения в строке алгоритмов (Delay)
+    def delay_alg(self):
+        clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
+        print('Задержка:' + str(clear))
+        return clear
