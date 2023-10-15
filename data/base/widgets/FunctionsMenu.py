@@ -1,16 +1,16 @@
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QComboBox, QLabel, QLineEdit, QHBoxLayout
-
-from data.base.widgets.MathLayout import MathLayout
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QVBoxLayout, QComboBox, QLabel, QLineEdit, QHBoxLayout, QPushButton
 
 
 class FunctionsMenu(QVBoxLayout):
+    # Дата, которую мы отправляем
+    data_changed = pyqtSignal(list, list, str, int)
 
     def __init__(self):
         super(FunctionsMenu, self).__init__()
 
         # ---------------- ComboBox ---------------- #
-        methods = ["Функция Химмельблау", "2", "3", "4", "5", "6", "7", "8"]
+        methods = ["Функция Химмельблау", "Унимодальная функция 1", "Унимодальная функция 2", "4", "5", "6", "7", "8"]
         self.choose_methods = QComboBox()
         self.choose_methods.addItems(methods)
         self.choose_methods.currentIndexChanged.connect(self.function_changed)
@@ -76,10 +76,26 @@ class FunctionsMenu(QVBoxLayout):
 
         self.addLayout(horizontal_layout)
 
+        # КНОПКА ОБНОВЛЕНИЯ CANVAS
+        self.update_button = QPushButton("Обновить")
+        self.update_button.setCheckable(True)
+        self.update_button.clicked.connect(self.update_button)
+
+        self.addWidget(self.update_button)
+
     # Функция обрабатывающая выбор функций
+
+    def update_button(self):  # i is an int
+        x_intervals = self.x_changed_intervals()
+        y_intervals = self.y_changed_intervals()
+        scale = self.changed_scale()
+        selected_function = self.choose_methods.currentIndex()
+
+        # Отправьте данные через сигнал
+        self.data_changed.emit(x_intervals, y_intervals, scale, selected_function)
+
     def function_changed(self, index):  # i is an int
-        MathLayout.update_canvas(index)
-        # print(index)
+        print(index)
 
     # Функция обрабатывающая изменения в строке функций (Интервал Х)
     def x_changed_intervals(self):
