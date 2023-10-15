@@ -11,7 +11,7 @@ def partial_function(f___, input, pos, value):
 
 
 def gradient(function, input):
-    """Частная произвоздная по каждому из параметров функции f(т.е. градиент)"""
+    """Частная производная по каждому из параметров функции f(т.е. градиент)"""
 
     ret = np.empty(len(input))
     for i in range(len(input)):
