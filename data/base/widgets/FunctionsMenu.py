@@ -79,13 +79,13 @@ class FunctionsMenu(QVBoxLayout):
         # КНОПКА ОБНОВЛЕНИЯ CANVAS
         self.update_button = QPushButton("Обновить")
         self.update_button.setCheckable(True)
-        self.update_button.clicked.connect(self.update_button)
+        self.update_button.clicked.connect(self.update_canvas_button)
 
         self.addWidget(self.update_button)
 
     # Функция обрабатывающая выбор функций
 
-    def update_button(self):  # i is an int
+    def update_canvas_button(self):  # i is an int
         x_intervals = self.x_changed_intervals()
         y_intervals = self.y_changed_intervals()
         scale = self.changed_scale()
@@ -106,7 +106,7 @@ class FunctionsMenu(QVBoxLayout):
 
     # Функция обрабатывающая изменения в строке функций (Интервал Y)
     def y_changed_intervals(self):
-        clear = self.lineEditX.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
+        clear = self.lineEditY.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
         ys = clear.split()
         print('Y интервал:' + str(ys))
         return ys
