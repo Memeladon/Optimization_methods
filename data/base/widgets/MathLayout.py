@@ -27,11 +27,10 @@ class MathLayout(QVBoxLayout):
         self.addWidget(self.canvas)
         # self.bar = None
 
-        # Отрисовка
-        self.update_canvas()
-
     @pyqtSlot(list, list, str, int)
-    def update_canvas(self, x_intervals, y_intervals, scale, selected_function):
+    def update_canvas(self, x_intervals=None, y_intervals=None, scale=None, selected_function=None):
+        self.canvas.ax.clear()
+
         if selected_function == 0:
             X, Y, Z = himmelblau(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
@@ -39,3 +38,4 @@ class MathLayout(QVBoxLayout):
             X, Y, Z = unimodal_one(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
 
+        self.canvas.draw()
