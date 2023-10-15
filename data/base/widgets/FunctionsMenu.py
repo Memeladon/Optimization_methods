@@ -10,10 +10,10 @@ class FunctionsMenu(QVBoxLayout):
         super(FunctionsMenu, self).__init__()
 
         # ---------------- ComboBox ---------------- #
-        methods = ["Функция Химмельблау", "Унимодальная функция 1", "Унимодальная функция 2", "4", "5", "6", "7", "8"]
+        methods = ["Функция Химмельблау", "Функция сферы", "Унимодальная функция 2", "4", "5", "6", "7", "8"]
         self.choose_methods = QComboBox()
         self.choose_methods.addItems(methods)
-        self.choose_methods.currentIndexChanged.connect(self.function_changed)
+        # self.choose_methods.currentIndexChanged.connect(self.function_changed)
 
         self.addWidget(self.choose_methods)
 
@@ -78,13 +78,11 @@ class FunctionsMenu(QVBoxLayout):
 
         # КНОПКА ОБНОВЛЕНИЯ CANVAS
         self.update_button = QPushButton("Обновить")
-        self.update_button.setCheckable(True)
         self.update_button.clicked.connect(self.update_canvas_button)
 
         self.addWidget(self.update_button)
 
-    # Функция обрабатывающая выбор функций
-
+    # Функция отправляющая данные функционального меню в отрисовку canvas
     def update_canvas_button(self):  # i is an int
         x_intervals = self.x_changed_intervals()
         y_intervals = self.y_changed_intervals()
@@ -93,9 +91,6 @@ class FunctionsMenu(QVBoxLayout):
 
         # Отправьте данные через сигнал
         self.data_changed.emit(x_intervals, y_intervals, scale, selected_function)
-
-    def function_changed(self, index):  # i is an int
-        print(index)
 
     # Функция обрабатывающая изменения в строке функций (Интервал Х)
     def x_changed_intervals(self):
@@ -114,5 +109,12 @@ class FunctionsMenu(QVBoxLayout):
     # Функция обрабатывающая изменения в строке функций (Масштаб Z)
     def changed_scale(self):
         clear = self.lineEditZ.text().replace(' ', '').replace(';', ' ')
-        print(clear)
+        print('Z масштаб:' + clear)
         return clear
+
+    # Функция задает начатьльное отображение в canvas
+    def set_initial_values(self):
+        # Устанавливаем первую функцию из списка
+        self.choose_methods.setCurrentIndex(0)
+        # Вызываем метод для обновления canvas
+        self.update_canvas_button()

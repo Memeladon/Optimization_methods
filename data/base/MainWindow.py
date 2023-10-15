@@ -24,28 +24,28 @@ class MainWindow(QMainWindow):
         self.addToolBar(TopToolbar())
 
         # Разбиение окна
-        main_layout = QGridLayout()  # Делит окно на части (в нашем случае на 2)
-        right_layout = QVBoxLayout()  # Правая часть окна
+        self.main_layout = QGridLayout()  # Делит окно на части (в нашем случае на 2)
+        self.right_layout = QVBoxLayout()  # Правая часть окна
 
         # Задается правая часть (Меню)
-        functions_menu = FunctionsMenu()
-        algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
+        self.functions_menu = FunctionsMenu()
+        self.algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
 
         # Левая чать окна (часть окна с графиком)
-        left_layout = MathLayout()
-        functions_menu.data_changed.connect(left_layout.update_canvas)
+        self.left_layout = MathLayout()
+        self.functions_menu.data_changed.connect(self.left_layout.update_canvas)
 
-        right_layout.addLayout(algorithm_menu)
-        right_layout.addLayout(functions_menu)
+        self.right_layout.addLayout(self.algorithm_menu)
+        self.right_layout.addLayout(self.functions_menu)
 
         # Добавление частей в окно
-        main_layout.addLayout(left_layout, 0, 0)
-        main_layout.addLayout(right_layout, 0, 1)
+        self.main_layout.addLayout(self.left_layout, 0, 0)
+        self.main_layout.addLayout(self.right_layout, 0, 1)
 
         # functions_menu.function_changed()
 
         main_widget = QWidget()
-        main_widget.setLayout(main_layout)
+        main_widget.setLayout(self.main_layout)
         self.setCentralWidget(main_widget)
 
     @staticmethod
@@ -54,5 +54,8 @@ class MainWindow(QMainWindow):
 
         window = MainWindow(1080, 720)
         window.show()
+
+        # Вызываем set_initial_values для FunctionsMenu
+        window.functions_menu.set_initial_values()
 
         app.exec()

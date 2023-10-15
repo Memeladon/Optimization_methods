@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from data.Functions.Himmelblau import himmelblau
-from data.Functions.UnimodalFunction1 import unimodal_one
+from data.functions.Himmelblau import himmelblau
+from data.functions.SphereFunction import sphere_function
 
 
 class MplCanvas(FigureCanvas):
@@ -30,12 +30,12 @@ class MathLayout(QVBoxLayout):
     @pyqtSlot(list, list, str, int)
     def update_canvas(self, x_intervals=None, y_intervals=None, scale=None, selected_function=None):
         self.canvas.ax.clear()
-
         if selected_function == 0:
             X, Y, Z = himmelblau(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            print('himmelblau')
         elif selected_function == 1:
-            X, Y, Z = unimodal_one(x_intervals, y_intervals, scale)
+            X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
-
+            print('sphere_function')
         self.canvas.draw()

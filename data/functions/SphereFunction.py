@@ -8,7 +8,7 @@ def objective(x, y):
     return x ** 2.0 + y ** 2.0
 
 
-def unimodal_one(x_intrvs, y_intervs, z_scale):
+def sphere_function(x_intrvs, y_intervs, z_scale):
     # define range for input
     r_min_x, r_max_x = float(x_intrvs[0]), float(y_intervs[1])
     r_min_y, r_max_y = float(y_intervs[0]), float(y_intervs[1])

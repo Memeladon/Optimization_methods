@@ -109,7 +109,7 @@ class AlgorithmMenu(QVBoxLayout):
             self.message("Executing process")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
-            self.process.start("python3", ['data/algorithms/gradient_descent.py'])
+            self.process.start("python3", ['gradient_descent.py'])
 
     def process_finished(self):
         self.message("Process finished.")
