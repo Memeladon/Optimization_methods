@@ -30,8 +30,16 @@ def gradient_descent(function, x0, y0, tk, M):
     e1 = 0.0001
     e2 = 0.0001
 
+    # Лучшие результаты
+    best_x = x0
+    best_y = y0
+    best_iteration = 0
+    best_value = function(x0, y0)
+    best_step = 0
+
     k = 0
     while True:
+
         (gx, gy) = gradient(function, [x0, y0])  # 3
 
         if np.linalg.norm((gx, gy)) < e1:  # Шаг 4. Проверить выполнение критерия окончания
@@ -43,6 +51,14 @@ def gradient_descent(function, x0, y0, tk, M):
         x1, y1 = next_point(x0, y0, gx, gy, tk)  # 7
         f1 = function(x1, y1)
         f0 = function(x0, y0)
+
+        if f1 < best_value:
+            best_value = f1
+            best_x = x1
+            best_y = y1
+            best_iteration = k
+            best_step = tk
+
         while not f1 < f0:  # 8 условие
             tk = tk / 2
             x1, y1 = next_point(x0, y0, gx, gy, tk)

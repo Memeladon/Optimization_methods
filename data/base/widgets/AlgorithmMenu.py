@@ -11,11 +11,11 @@ class AlgorithmMenu(QVBoxLayout):
         algorithms = ["Градиентный спуск", "Квадратичное программирование", "Функция Розенброкка",
                       "Рой частиц", "Пчелиная оптимизация", "Искусственная имунная сеть",
                       "Бактериальная оптимизация", "Гибридный алгоритм"]
-        choose_algorithm = QComboBox()
-        choose_algorithm.addItems(algorithms)
-        choose_algorithm.currentIndexChanged.connect(self.algorithm_changed)
+        self.choose_algorithm = QComboBox()
+        self.choose_algorithm.addItems(algorithms)
+        self.choose_algorithm.currentIndexChanged.connect(self.algorithm_changed)
 
-        self.addWidget(choose_algorithm)
+        self.addWidget(self.choose_algorithm)
 
         # ----------------- Labels ----------------- #
         # Разбиение на название - значение
@@ -109,11 +109,25 @@ class AlgorithmMenu(QVBoxLayout):
             self.message("Executing process")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
+            self.process.readyReadStandardOutput.connect(self.process_output)  # Добавьте эту строку
             self.process.start("python3", ['gradient_descent.py'])
+
+    def process_output(self):
+        output = str(self.process.readAllStandardOutput(), "utf-8")
+        self.message(output)
+        # Разберитесь с выводом данных градиентного спуска в консоль и извлечением лучшего результата
+        best_x, best_y, best_step, best_value = parse_output(output)  # Реализуйте эту функцию
+        if best_x is not None and best_y is not None:
+            # self.plot_best_point(best_x, best_y)
 
     def process_finished(self):
         self.message("Process finished.")
         self.process = None
+
+    def update_algorithm(self):
+        selected_algorithm = self.choose_algorithm.currentText()
+        if selected_algorithm == "Градиентный спуск":
+            self.start_process()
 
     # Функция обрабатывающая изменения в строке алгоритмов (X)
     def x_alg(self):

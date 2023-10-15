@@ -29,7 +29,7 @@ class MathLayout(QVBoxLayout):
 
     @pyqtSlot(list, list, str, int)
     def update_canvas(self, x_intervals=None, y_intervals=None, scale=None, selected_function=None):
-        self.canvas.ax.clear()
+        self.clear_plot()
         if selected_function == 0:
             X, Y, Z = himmelblau(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
@@ -38,4 +38,13 @@ class MathLayout(QVBoxLayout):
             X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
             print('sphere_function')
+        best_x, best_y, best_value = next(best_results)
+        self.plot_best_point(best_x, best_y)
         self.canvas.draw()
+
+    def plot_best_point(self, x, y):
+        self.canvas.ax.plot([x], [y], [function(x, y)], 'ro')  # 'ro' - красные точки
+        self.canvas.draw()
+
+    def clear_plot(self):
+        self.canvas.ax.clear()
