@@ -2,6 +2,7 @@ import numpy as np
 from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+
 from data.Functions.Himmelblau import himmelblau
 
 
@@ -25,16 +26,14 @@ class MathLayout(QVBoxLayout):
         self.scale_z = z_scale
         self.bar = None
 
-        # Выбор/задание функции
-        X, Y, Z = himmelblau(self.interv_x, self.interv_y, self.scale_z)
-
         # Отрисовка
-        self.ax.plot_surface(X, Y, Z, cmap='jet')
+        self.update_canvas(0)
 
-    # def update_canvas(self):
-    #     x_position = [0.5]
-    #
-    #     if self.bar:
-    #         self.bar.remove()
-    #     self.bar = self.ax.bar(x_position, value, width=0.2, color='g')
-    #     self.canvas.draw()
+    def update_canvas(self, item):
+        item = 0
+        if item == 0:
+            X, Y, Z = himmelblau(self.interv_x, self.interv_y, self.scale_z)
+            self.ax.plot_surface(X, Y, Z, cmap='jet')
+        if item == 1:
+            print(1)
+            # Тут должна быть следующая функция

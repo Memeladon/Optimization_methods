@@ -1,6 +1,8 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QComboBox, QLabel, QLineEdit, QHBoxLayout
 
+from data.base.widgets.MathLayout import MathLayout
+
 
 class FunctionsMenu(QVBoxLayout):
 
@@ -76,9 +78,8 @@ class FunctionsMenu(QVBoxLayout):
 
     # Функция обрабатывающая выбор функций
     def function_changed(self, index):  # i is an int
-        print(index)
-        # if index == 0:
-        #
+        MathLayout.update_canvas(index)
+        # print(index)
 
     # Функция обрабатывающая изменения в строке функций (Интервал Х)
     def x_changed_intervals(self):
