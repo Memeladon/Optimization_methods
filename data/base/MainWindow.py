@@ -32,9 +32,8 @@ class MainWindow(QMainWindow):
         algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
 
         # Левая чать окна (часть окна с графиком)
-        left_layout = MathLayout(functions_menu.x_changed_intervals(),
-                                 functions_menu.y_changed_intervals(),
-                                 functions_menu.changed_scale())
+        left_layout = MathLayout()
+        functions_menu.data_changed.connect(left_layout.update_canvas)
 
         right_layout.addLayout(algorithm_menu)
         right_layout.addLayout(functions_menu)
@@ -48,10 +47,6 @@ class MainWindow(QMainWindow):
         main_widget = QWidget()
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
-
-    def update_math(self):
-        sender = self.sender()
-        self.statusBar().showMessage(sender.text() + ' was pressed')
 
     @staticmethod
     def render_main_win():

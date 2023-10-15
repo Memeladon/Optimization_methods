@@ -1,39 +1,41 @@
-import numpy as np
+from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from data.Functions.Himmelblau import himmelblau
+from data.functions.Himmelblau import himmelblau
+from data.functions.UnimodalFunction1 import unimodal_one
+
+
+class MplCanvas(FigureCanvas):
+    def __init__(self):
+        fig = Figure(figsize=(15, 6))
+        self.ax = fig.add_subplot(111, projection='3d')
+        super(MplCanvas, self).__init__(fig)
+
+        self.mpl_connect('button_press_event', self.ax._button_press)
+        self.mpl_connect('button_release_event', self.ax._button_release)
+        self.mpl_connect('motion_notify_event', self.ax._on_move)
 
 
 class MathLayout(QVBoxLayout):
-    def __init__(self, interval_x, interval_y, z_scale):
+    def __init__(self):
         super().__init__()
 
         # Создание сетки и задание основы графика
-        self.fig = Figure(figsize=(15, 6))
-        self.canvas = FigureCanvas(self.fig)
-        self.ax = self.fig.add_subplot(111, projection='3d')
-
-        self.canvas.mpl_connect('button_press_event', self.ax._button_press)
-        self.canvas.mpl_connect('button_release_event', self.ax._button_release)
-        self.canvas.mpl_connect('motion_notify_event', self.ax._on_move)
-
+        self.canvas = MplCanvas()
         self.addWidget(self.canvas)
-
-        self.interv_x = interval_x
-        self.interv_y = interval_y
-        self.scale_z = z_scale
-        self.bar = None
+        # self.bar = None
 
         # Отрисовка
-        self.update_canvas(0)
+        self.update_canvas()
 
-    def update_canvas(self, item):
-        item = 0
-        if item == 0:
-            X, Y, Z = himmelblau(self.interv_x, self.interv_y, self.scale_z)
-            self.ax.plot_surface(X, Y, Z, cmap='jet')
-        if item == 1:
-            print(1)
-            # Тут должна быть следующая функция
+    @pyqtSlot(list, list, str, int)
+    def update_canvas(self, x_intervals, y_intervals, scale, selected_function):
+        if selected_function == 0:
+            X, Y, Z = himmelblau(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+        elif selected_function == 1:
+            X, Y, Z = unimodal_one(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+
