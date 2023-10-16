@@ -29,11 +29,12 @@ class MainWindow(QMainWindow):
 
         # Задается правая часть (Меню)
         self.functions_menu = FunctionsMenu()
-        self.algorithm_menu = AlgorithmMenu()  # Часть окна с конфигом
 
         # Левая чать окна (часть окна с графиком)
         self.left_layout = MathLayout()
         self.functions_menu.data_changed.connect(self.left_layout.update_canvas)
+
+        self.algorithm_menu = AlgorithmMenu(self.left_layout) # Часть окна с конфигом
 
         self.right_layout.addLayout(self.algorithm_menu)
         self.right_layout.addLayout(self.functions_menu)

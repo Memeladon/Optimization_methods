@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from data.Functions.Himmelblau import himmelblau
-from data.Functions.SphereFunction import sphere_function
+from data.functions.Himmelblau import himmelblau
+from data.functions.SphereFunction import sphere_function
 
 
 class MplCanvas(FigureCanvas):
@@ -27,6 +27,7 @@ class MathLayout(QVBoxLayout):
         self.addWidget(self.canvas)
         # self.bar = None
 
+    # Отрисовка графиков их FunctionMenu
     @pyqtSlot(list, list, str, int)
     def update_canvas(self, x_intervals=None, y_intervals=None, scale=None, selected_function=None):
         self.clear_plot()
@@ -38,13 +39,15 @@ class MathLayout(QVBoxLayout):
             X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
             print('sphere_function')
-        # best_x, best_y, best_value = next(best_results)
-        # self.plot_best_point(best_x, best_y)
         self.canvas.draw()
 
-    # def plot_best_point(self, x, y):
-    #     self.canvas.ax.plot([x], [y], [function(x, y)], 'ro')  # 'ro' - красные точки
-    #     self.canvas.draw()
+    # @pyqtSlot(list)
+    # def algorithms_execution(self, x, y, step, iterations, delay, selected_algorithm):
+
+
+    def plot_points(self, x, y, z, color='r', marker='o'):
+        self.canvas.ax.scatter(x, y, z, c=color, marker=marker)
+        self.canvas.draw()
 
     def clear_plot(self):
         self.canvas.ax.clear()

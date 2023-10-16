@@ -1,14 +1,17 @@
-from PyQt6.QtCore import Qt, QProcess
-from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QLabel,
-                             QLineEdit, QHBoxLayout, QPlainTextEdit, QStackedLayout)
+from PyQt6.QtCore import QProcess, pyqtSignal
+from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QPlainTextEdit, QStackedLayout)
 
 from data.base.layouts import (Artificial_immune_network, Bacterial_optimization, Bee_optimization, Gradient_descent,
                                Hybrid_algorithm, Quadratic_programming, Rosenbrock_function, Swarm_of_particles)
+from data.algorithms import (gradient_descent)
+
 
 class AlgorithmMenu(QVBoxLayout):
+    data_changed = pyqtSignal(list)
 
-    def __init__(self):
+    def __init__(self, math_layout):
         super(AlgorithmMenu, self).__init__()
+        self.math_layout = math_layout
 
         # ---------------- ComboBox ---------------- #
         algorithms = ["Градиентный спуск", "Квадратичное программирование", "Функция Розенброкка",
@@ -44,70 +47,6 @@ class AlgorithmMenu(QVBoxLayout):
 
         self.addLayout(self.stacked_layout)
 
-        # gradient = Gradient_descent.Gradient_descent()
-        # self.addLayout(gradient)
-        #
-        # quadratic = Quadratic_programming.Quadratic_programming()
-        # self.addLayout(quadratic)
-
-        # Разбиение на название - значение
-        # horizontal_layout = QHBoxLayout()
-        # vertical_layout_left = QVBoxLayout()
-        # vertical_layout_right = QVBoxLayout()
-        #
-        # # X
-        # self.label_x = QLabel('&X')
-        # self.label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # self.lineEditX = QLineEdit('-1')
-        # self.lineEditX.textChanged[str].connect(self.x_alg)
-        # self.label_x.setBuddy(self.lineEditX)
-        #
-        # # Y
-        # self.label_y = QLabel('&Y')
-        # self.label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # self.lineEditY = QLineEdit('-1')
-        # self.lineEditY.textChanged[str].connect(self.y_alg)
-        # self.label_y.setBuddy(self.lineEditY)
-        #
-        # # НАЧАЛЬНЫЙ ШАГ
-        # self.label_first_step = QLabel('&Начальный шаг')
-        # self.label_first_step.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # self.lineEdit_first_step = QLineEdit('0.5')
-        # self.lineEdit_first_step.textChanged[str].connect(self.step_alg)
-        # self.label_first_step.setBuddy(self.lineEdit_first_step)
-        #
-        # # ЧИСЛО ИТЕРАЦИЙ
-        # self.label_iterations = QLabel('&Число итераций')
-        # self.label_iterations.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # self.lineEdit_iterations = QLineEdit('100')
-        # self.lineEdit_iterations.textChanged[str].connect(self.iter_alg)
-        # self.label_iterations.setBuddy(self.lineEdit_iterations)
-        #
-        # # ЗАДЕРЖКА
-        # self.label_delay = QLabel('&Задержка')
-        # self.label_delay.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        # self.lineEdit_delay = QLineEdit('0.5')
-        # self.lineEdit_delay.textChanged[str].connect(self.changed)
-        # self.label_delay.setBuddy(self.lineEdit_delay)
-        #
-        # # Запихиваем в layout
-        # vertical_layout_left.addWidget(self.label_x)
-        # vertical_layout_left.addWidget(self.label_y)
-        # vertical_layout_left.addWidget(self.label_first_step)
-        # vertical_layout_left.addWidget(self.label_iterations)
-        # vertical_layout_left.addWidget(self.label_delay)
-        #
-        # vertical_layout_right.addWidget(self.lineEditX)
-        # vertical_layout_right.addWidget(self.lineEditY)
-        # vertical_layout_right.addWidget(self.lineEdit_first_step)
-        # vertical_layout_right.addWidget(self.lineEdit_iterations)
-        # vertical_layout_right.addWidget(self.lineEdit_delay)
-        #
-        # horizontal_layout.addLayout(vertical_layout_left)
-        # horizontal_layout.addLayout(vertical_layout_right)
-        #
-        # self.addLayout(horizontal_layout)
-
         # ---------------- Button ---------------- #
         self.start_button = QPushButton("Выполнить")
         self.start_button.setCheckable(True)
@@ -137,10 +76,6 @@ class AlgorithmMenu(QVBoxLayout):
             print("Реализация алгоритма не найдена!")
         # if index == 0:
 
-    # def changed(self, changed_info):
-    #     clear = changed_info.replace(' ', '')
-    #     print(clear)
-
     # Консольные функции
     def message(self, s):
         self.console.appendPlainText(s)
@@ -150,54 +85,66 @@ class AlgorithmMenu(QVBoxLayout):
             self.message("Executing process")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
-            # self.process.readyReadStandardOutput.connect(self.process_output)  # Добавьте эту строку
             self.process.start("python3", ['gradient_descent.py'])
-
-    # def process_output(self):
-    #     output = str(self.process.readAllStandardOutput(), "utf-8")
-    #     self.message(output)
-    #     # Разберитесь с выводом данных градиентного спуска в консоль и извлечением лучшего результата
-    #     best_x, best_y, best_step, best_value = parse_output(output)  # Реализуйте эту функцию
-    #     if best_x is not None and best_y is not None:
-    #         self.plot_best_point(best_x, best_y)
 
     def process_finished(self):
         self.message("Process finished.")
         self.process = None
 
-    def update_algorithm(self):
-        selected_algorithm = self.choose_algorithm.currentText()
-        if selected_algorithm == "Градиентный спуск":
-            self.start_process()
+    def collect_data(self):
+        index = self.stacked_layout.currentIndex()
 
-    # # Функция обрабатывающая изменения в строке алгоритмов (X)
-    # def x_alg(self):
-    #     clear = self.lineEditX.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
-    #     xs = clear.split()
-    #     print('X:' + str(xs))
-    #     return xs
+        layouts = {
+            0: Gradient_descent,
+            1: Quadratic_programming,
+            2: Rosenbrock_function,
+            3: Swarm_of_particles,
+            4: Bee_optimization,
+            5: Artificial_immune_network,
+            6: Bacterial_optimization,
+            7: Hybrid_algorithm
+        }
+        layout_functions = {
+            0: gradient_descent.gradient_descent
+            # 1: quadratic_programming.quadratic_programming,
+            # 2: rosenbrock_function.rosenbrock_function,
+            # 3: swarm_of_particles.swarm_of_particles,
+            # 4: bee_optimization.bee_optimization,
+            # 5: artificial_immune_network.artificial_immune_network,
+            # 6: bacterial_optimization.bacterial_optimization,
+            # 7: hybrid_algorithm.hybrid_algorithm
+        }
+
+        selected_layout = layouts.get(index)
+        selected_function = layout_functions.get(index)
+
+        if selected_function:
+            x, y, step, iterations, delay = selected_layout.collect_data_layout()
+            best = selected_function(x, y, step, iterations, delay)
+            print(best)
+            # self.data_changed.emit(best)
+        else:
+            print("необходимый layout не найден!")
+
+    # def run_optimization(self):
+    #     # Получите выбранный алгоритм и функцию
+    #     selected_algorithm = self.choose_algorithm.currentText()
+    #     selected_function = self.layout_dict[selected_algorithm]
     #
-    # # Функция обрабатывающая изменения в строке алгоритмов (Y)
-    # def y_alg(self):
-    #     clear = self.lineEditY.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
-    #     ys = clear.split()
-    #     print('Y:' + str(ys))
-    #     return ys
+    #     # Здесь вы должны получить начальные значения x0 и y0, шаг tk, M и другие параметры ввода,
+    #     # которые могут понадобиться для градиентного спуска.
     #
-    # # Функция обрабатывающая изменения в строке алгоритмов (Steps)
-    # def step_alg(self):
-    #     clear = self.lineEdit_first_step.text().replace(' ', '').replace(',', '.')
-    #     print('Начальный шаг:' + str(clear))
-    #     return clear
+    #     x0, y0 = 3, 3 # начальные значения
+    #     tk = 0 # шаг
+    #     M =  # M
+    #     # Определите параметры e1, e2, которые используются в градиентном спуске.
     #
-    # # Функция обрабатывающая изменения в строке алгоритмов (Iterations)
-    # def iter_alg(self):
-    #     clear = self.lineEdit_iterations.text().replace(' ', '')
-    #     print('Число итераций:' + str(clear))
-    #     return clear
+    #     # Запустите градиентный спуск
+    #     for x, y, k, f in gradient_descent(selected_function, x0, y0, tk, M):
+    #         # Обновите график в MathLayout
+    #         self.math_layout.plot_points([x], [y], [f])
+    #         # Выведите информацию о текущем шаге в консоль
+    #         self.message(f'Step {k}: x={x}, y={y}, f={f}')
     #
-    # # Функция обрабатывающая изменения в строке алгоритмов (Delay)
-    # def delay_alg(self):
-    #     clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
-    #     print('Задержка:' + str(clear))
-    #     return clear
+    #     # Оповестите о завершении процесса
+    #     self.message("Optimization finished.")
