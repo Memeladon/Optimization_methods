@@ -92,7 +92,7 @@ class AlgorithmMenu(QVBoxLayout):
         self.process = None
 
     @pyqtSlot(float, float, float, float, float)
-    def collect_data(self):
+    def collect_data(self, x=None, y=None, step=None, iterations=None, delay=None):
         index = self.stacked_layout.currentIndex()
 
         layouts = {
@@ -120,7 +120,6 @@ class AlgorithmMenu(QVBoxLayout):
         selected_function = layout_functions.get(index)
 
         if selected_function:
-            x, y, step, iterations, delay = selected_layout.collect_data_layout()
             best = selected_function(x, y, step, iterations, delay)
             print(best)
             # self.data_changed.emit(best)
