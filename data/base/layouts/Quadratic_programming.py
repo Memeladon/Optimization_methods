@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
+from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
 
 
 class Quadratic_programming(QHBoxLayout):
@@ -7,9 +7,11 @@ class Quadratic_programming(QHBoxLayout):
     def __init__(self):
         super(Quadratic_programming, self).__init__()
 
-        horizontal_layout = QHBoxLayout()
-        vertical_layout_left = QVBoxLayout()
-        vertical_layout_right = QVBoxLayout()
+        grid_layout = QGridLayout()
+
+        # horizontal_layout = QHBoxLayout()
+        # vertical_layout_left = QVBoxLayout()
+        # vertical_layout_right = QVBoxLayout()
 
         # X
         self.label_x = QLabel('&Z')
@@ -47,22 +49,33 @@ class Quadratic_programming(QHBoxLayout):
         self.label_delay.setBuddy(self.lineEdit_delay)
 
         # Запихиваем в layout
-        vertical_layout_left.addWidget(self.label_x)
-        vertical_layout_left.addWidget(self.label_y)
-        vertical_layout_left.addWidget(self.label_first_step)
-        vertical_layout_left.addWidget(self.label_iterations)
-        vertical_layout_left.addWidget(self.label_delay)
+        # vertical_layout_left.addWidget(self.label_x)
+        # vertical_layout_left.addWidget(self.label_y)
+        # vertical_layout_left.addWidget(self.label_first_step)
+        # vertical_layout_left.addWidget(self.label_iterations)
+        # vertical_layout_left.addWidget(self.label_delay)
+        #
+        # vertical_layout_right.addWidget(self.lineEditX)
+        # vertical_layout_right.addWidget(self.lineEditY)
+        # vertical_layout_right.addWidget(self.lineEdit_first_step)
+        # vertical_layout_right.addWidget(self.lineEdit_iterations)
+        # vertical_layout_right.addWidget(self.lineEdit_delay)
+        #
+        # horizontal_layout.addLayout(vertical_layout_left)
+        # horizontal_layout.addLayout(vertical_layout_right)
 
-        vertical_layout_right.addWidget(self.lineEditX)
-        vertical_layout_right.addWidget(self.lineEditY)
-        vertical_layout_right.addWidget(self.lineEdit_first_step)
-        vertical_layout_right.addWidget(self.lineEdit_iterations)
-        vertical_layout_right.addWidget(self.lineEdit_delay)
+        grid_layout.addWidget(self.label_x, 0, 0)
+        grid_layout.addWidget(self.lineEditX, 0, 1)
+        grid_layout.addWidget(self.label_y, 1, 0)
+        grid_layout.addWidget(self.lineEditY, 1, 1)
+        grid_layout.addWidget(self.label_first_step, 2, 0)
+        grid_layout.addWidget(self.label_iterations, 3, 0)
+        grid_layout.addWidget(self.label_delay, 4, 0)
+        grid_layout.addWidget(self.lineEdit_first_step, 2, 1)
+        grid_layout.addWidget(self.lineEdit_iterations, 3, 1)
+        grid_layout.addWidget(self.lineEdit_delay, 4, 1)
 
-        horizontal_layout.addLayout(vertical_layout_left)
-        horizontal_layout.addLayout(vertical_layout_right)
-
-        self.addLayout(horizontal_layout)
+        self.addLayout(grid_layout)
 
     def changed(self, changed_info):
         clear = changed_info.replace(' ', '')
@@ -99,3 +112,4 @@ class Quadratic_programming(QHBoxLayout):
         clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
         print('Задержка:' + str(clear))
         return clear
+

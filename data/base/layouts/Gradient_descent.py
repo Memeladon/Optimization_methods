@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
+from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
 
 
 class Gradient_descent(QHBoxLayout):
@@ -7,27 +7,29 @@ class Gradient_descent(QHBoxLayout):
     def __init__(self):
         super(Gradient_descent, self).__init__()
 
-        horizontal_layout = QHBoxLayout()
-        vertical_layout_left = QVBoxLayout()
-        vertical_layout_right = QVBoxLayout()
+        grid_layout = QGridLayout()
+
+        # horizontal_layout = QHBoxLayout()
+        # vertical_layout_left = QVBoxLayout()
+        # vertical_layout_right = QVBoxLayout()
 
         # X
         self.label_x = QLabel('&X')
-        self.label_x.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.label_x.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEditX = QLineEdit('-1')
         self.lineEditX.textChanged[str].connect(self.x_alg)
         self.label_x.setBuddy(self.lineEditX)
 
         # Y
         self.label_y = QLabel('&Y')
-        self.label_y.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.label_y.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEditY = QLineEdit('-1')
         self.lineEditY.textChanged[str].connect(self.y_alg)
         self.label_y.setBuddy(self.lineEditY)
 
         # НАЧАЛЬНЫЙ ШАГ
         self.label_first_step = QLabel('&Начальный шаг')
-        self.label_first_step.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.label_first_step.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_first_step = QLineEdit('0.5')
         self.lineEdit_first_step.textChanged[str].connect(self.step_alg)
         self.label_first_step.setBuddy(self.lineEdit_first_step)
@@ -47,22 +49,34 @@ class Gradient_descent(QHBoxLayout):
         self.label_delay.setBuddy(self.lineEdit_delay)
 
         # Запихиваем в layout
-        vertical_layout_left.addWidget(self.label_x)
-        vertical_layout_left.addWidget(self.label_y)
-        vertical_layout_left.addWidget(self.label_first_step)
-        vertical_layout_left.addWidget(self.label_iterations)
-        vertical_layout_left.addWidget(self.label_delay)
+        # vertical_layout_left.addWidget(self.label_x)
+        # vertical_layout_left.addWidget(self.label_y)
+        # vertical_layout_left.addWidget(self.label_first_step)
+        # vertical_layout_left.addWidget(self.label_iterations)
+        # vertical_layout_left.addWidget(self.label_delay)
+        #
+        # vertical_layout_right.addWidget(self.lineEditX)
+        # vertical_layout_right.addWidget(self.lineEditY)
+        # vertical_layout_right.addWidget(self.lineEdit_first_step)
+        # vertical_layout_right.addWidget(self.lineEdit_iterations)
+        # vertical_layout_right.addWidget(self.lineEdit_delay)
+        #
+        # horizontal_layout.addLayout(vertical_layout_left)
+        # horizontal_layout.addLayout(vertical_layout_right)
 
-        vertical_layout_right.addWidget(self.lineEditX)
-        vertical_layout_right.addWidget(self.lineEditY)
-        vertical_layout_right.addWidget(self.lineEdit_first_step)
-        vertical_layout_right.addWidget(self.lineEdit_iterations)
-        vertical_layout_right.addWidget(self.lineEdit_delay)
+        grid_layout.addWidget(self.label_x, 0, 0)
+        grid_layout.addWidget(self.lineEditX, 0, 1)
+        grid_layout.addWidget(self.label_y, 1, 0)
+        grid_layout.addWidget(self.lineEditY, 1, 1)
+        grid_layout.addWidget(self.label_first_step, 2, 0)
+        grid_layout.addWidget(self.label_iterations, 3, 0)
+        grid_layout.addWidget(self.label_delay, 4, 0)
+        grid_layout.addWidget(self.lineEdit_first_step, 2, 1)
+        grid_layout.addWidget(self.lineEdit_iterations, 3, 1)
+        grid_layout.addWidget(self.lineEdit_delay, 4, 1)
 
-        horizontal_layout.addLayout(vertical_layout_left)
-        horizontal_layout.addLayout(vertical_layout_right)
 
-        self.addLayout(horizontal_layout)
+        self.addLayout(grid_layout)
 
     def changed(self, changed_info):
         clear = changed_info.replace(' ', '')
@@ -99,3 +113,12 @@ class Gradient_descent(QHBoxLayout):
         clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
         print('Задержка:' + str(clear))
         return clear
+
+    def collect_data_layout(self):
+        x = self.x_alg()
+        y = self.y_alg()
+        first_step = self.step_alg()
+        amount_iter = self.iter_alg()
+        delay = self.delay_alg()
+
+        return x, y, first_step, amount_iter, delay
