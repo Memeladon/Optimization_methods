@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QProcess, pyqtSignal
+from PyQt6.QtCore import QProcess, pyqtSignal, pyqtSlot
 from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QPlainTextEdit, QStackedLayout)
 
 from data.base.layouts import (Artificial_immune_network, Bacterial_optimization, Bee_optimization, Gradient_descent,
@@ -50,7 +50,7 @@ class AlgorithmMenu(QVBoxLayout):
         # ---------------- Button ---------------- #
         self.start_button = QPushButton("Выполнить")
         self.start_button.setCheckable(True)
-        self.start_button.clicked.connect(self.start_process)
+        self.start_button.clicked.connect(self.collect_data)
 
         self.addWidget(self.start_button)
 
@@ -91,18 +91,19 @@ class AlgorithmMenu(QVBoxLayout):
         self.message("Process finished.")
         self.process = None
 
+    @pyqtSlot(float, float, float, float, float)
     def collect_data(self):
         index = self.stacked_layout.currentIndex()
 
         layouts = {
-            0: Gradient_descent,
-            1: Quadratic_programming,
-            2: Rosenbrock_function,
-            3: Swarm_of_particles,
-            4: Bee_optimization,
-            5: Artificial_immune_network,
-            6: Bacterial_optimization,
-            7: Hybrid_algorithm
+            0: Gradient_descent.Gradient_descent,
+            1: Quadratic_programming.Quadratic_programming,
+            2: Rosenbrock_function.Rosenbrock_function,
+            3: Swarm_of_particles.Swarm_of_particles,
+            4: Bee_optimization.Bee_optimization,
+            5: Artificial_immune_network.Artificial_immune_network,
+            6: Bacterial_optimization.Bacterial_optimization,
+            7: Hybrid_algorithm.Hybrid_algorithm
         }
         layout_functions = {
             0: gradient_descent.gradient_descent

@@ -1,8 +1,9 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
 
 
 class Gradient_descent(QHBoxLayout):
+    data_changed = pyqtSignal(float, float, float, float, float,)
 
     def __init__(self):
         super(Gradient_descent, self).__init__()
@@ -75,7 +76,6 @@ class Gradient_descent(QHBoxLayout):
         grid_layout.addWidget(self.lineEdit_iterations, 3, 1)
         grid_layout.addWidget(self.lineEdit_delay, 4, 1)
 
-
         self.addLayout(grid_layout)
 
     def changed(self, changed_info):
@@ -121,4 +121,7 @@ class Gradient_descent(QHBoxLayout):
         amount_iter = self.iter_alg()
         delay = self.delay_alg()
 
-        return x, y, first_step, amount_iter, delay
+        self.data_changed.emit(x, y, first_step, amount_iter, delay)
+
+
+
