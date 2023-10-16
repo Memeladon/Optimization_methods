@@ -1,3 +1,3 @@
-from data.functions.Himmelblau import himmelblau
-from data.functions.UnimodalFunction1 import unimodal_one
+from data.Functions.Himmelblau import himmelblau
+from data.Functions.UnimodalFunction1 import unimodal_one
 
