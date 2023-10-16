@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from data.functions.Himmelblau import himmelblau
-from data.functions.SphereFunction import sphere_function
+from data.Functions.Himmelblau import himmelblau
+from data.Functions.SphereFunction import sphere_function
 
 
 class MplCanvas(FigureCanvas):
