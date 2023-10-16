@@ -109,16 +109,16 @@ class AlgorithmMenu(QVBoxLayout):
             self.message("Executing process")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
-            self.process.readyReadStandardOutput.connect(self.process_output)  # Добавьте эту строку
+            # self.process.readyReadStandardOutput.connect(self.process_output)  # Добавьте эту строку
             self.process.start("python3", ['gradient_descent.py'])
 
-    def process_output(self):
-        output = str(self.process.readAllStandardOutput(), "utf-8")
-        self.message(output)
-        # Разберитесь с выводом данных градиентного спуска в консоль и извлечением лучшего результата
-        best_x, best_y, best_step, best_value = parse_output(output)  # Реализуйте эту функцию
-        if best_x is not None and best_y is not None:
-            # self.plot_best_point(best_x, best_y)
+    # def process_output(self):
+    #     output = str(self.process.readAllStandardOutput(), "utf-8")
+    #     self.message(output)
+    #     # Разберитесь с выводом данных градиентного спуска в консоль и извлечением лучшего результата
+    #     best_x, best_y, best_step, best_value = parse_output(output)  # Реализуйте эту функцию
+    #     if best_x is not None and best_y is not None:
+    #         self.plot_best_point(best_x, best_y)
 
     def process_finished(self):
         self.message("Process finished.")
