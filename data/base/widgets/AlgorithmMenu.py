@@ -36,7 +36,7 @@ class AlgorithmMenu(QVBoxLayout):
 
         self.stacked_layout = QStackedLayout()
 
-        # QStackedLayout управляет виджетами, а не макетами напрямую
+        # QStackedLayout управляет виджетами, а не макетами напрямую;
         for layout in self.layout_dict.values():
             widget = QWidget()
             widget.setLayout(layout)
