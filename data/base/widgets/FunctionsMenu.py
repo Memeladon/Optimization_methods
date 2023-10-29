@@ -10,7 +10,8 @@ class FunctionsMenu(QVBoxLayout):
         super(FunctionsMenu, self).__init__()
 
         # ---------------- ComboBox ---------------- #
-        methods = ["Функция Химмельблау", "Функция сферы", "Унимодальная функция 2", "4", "5", "6", "7", "8"]
+        methods = ["Функция Химмельблау", "Функция сферы", "Функция Матьяса", "Функция Изома", "Функция Экли",
+                   "Табличная функция Хольдера"]
         self.choose_methods = QComboBox()
         self.choose_methods.addItems(methods)
         # self.choose_methods.currentIndexChanged.connect(self.function_changed)

@@ -3,8 +3,8 @@ from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from data.functions.Himmelblau import himmelblau
-from data.functions.SphereFunction import sphere_function
+from data.functions import (holder_table_function, himmelblau, sphere_function, mathias_function, izoma_function,
+                            ackley_function)
 
 
 class MplCanvas(FigureCanvas):
@@ -39,11 +39,31 @@ class MathLayout(QVBoxLayout):
             X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
             print('sphere_function')
-        self.canvas.draw()
+        elif selected_function == 2:
+            X, Y, Z = mathias_function(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            print('mathias_function')
+            self.canvas.draw()
+        elif selected_function == 3:
+            X, Y, Z = izoma_function(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            print('izoma_function')
+            self.canvas.draw()
+        elif selected_function == 4:
+            X, Y, Z = ackley_function(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            print('ackley_function')
+            self.canvas.draw()
+        elif selected_function == 5:
+            X, Y, Z = holder_table_function(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            print('holder_table_function')
+            self.canvas.draw()
+        else:
+            print('Выход за предел выбора функции')
 
     # @pyqtSlot(list)
     # def algorithms_execution(self, x, y, step, iterations, delay, selected_algorithm):
-
 
     def plot_points(self, x, y, z, color='r', marker='o'):
         self.canvas.ax.scatter(x, y, z, c=color, marker=marker)

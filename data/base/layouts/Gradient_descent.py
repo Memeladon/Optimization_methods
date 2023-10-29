@@ -3,16 +3,12 @@ from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QLine
 
 
 class Gradient_descent(QHBoxLayout):
-    data_changed = pyqtSignal(float, float, float, float, float,)
+    data_changed = pyqtSignal(list)
 
     def __init__(self):
         super(Gradient_descent, self).__init__()
 
         grid_layout = QGridLayout()
-
-        # horizontal_layout = QHBoxLayout()
-        # vertical_layout_left = QVBoxLayout()
-        # vertical_layout_right = QVBoxLayout()
 
         # X
         self.label_x = QLabel('&X')
@@ -48,22 +44,6 @@ class Gradient_descent(QHBoxLayout):
         self.lineEdit_delay = QLineEdit('0.5')
         self.lineEdit_delay.textChanged[str].connect(self.changed)
         self.label_delay.setBuddy(self.lineEdit_delay)
-
-        # Запихиваем в layout
-        # vertical_layout_left.addWidget(self.label_x)
-        # vertical_layout_left.addWidget(self.label_y)
-        # vertical_layout_left.addWidget(self.label_first_step)
-        # vertical_layout_left.addWidget(self.label_iterations)
-        # vertical_layout_left.addWidget(self.label_delay)
-        #
-        # vertical_layout_right.addWidget(self.lineEditX)
-        # vertical_layout_right.addWidget(self.lineEditY)
-        # vertical_layout_right.addWidget(self.lineEdit_first_step)
-        # vertical_layout_right.addWidget(self.lineEdit_iterations)
-        # vertical_layout_right.addWidget(self.lineEdit_delay)
-        #
-        # horizontal_layout.addLayout(vertical_layout_left)
-        # horizontal_layout.addLayout(vertical_layout_right)
 
         grid_layout.addWidget(self.label_x, 0, 0)
         grid_layout.addWidget(self.lineEditX, 0, 1)
@@ -121,7 +101,6 @@ class Gradient_descent(QHBoxLayout):
         amount_iter = self.iter_alg()
         delay = self.delay_alg()
 
-        self.data_changed.emit(x, y, first_step, amount_iter, delay)
-
-
-
+        data = [x, y, first_step, amount_iter, delay]
+        self.data_changed.emit(data)
+        return data

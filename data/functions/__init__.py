@@ -1,0 +1,6 @@
+from AckleyFunction import ackley_function
+from Himmelblau import himmelblau
+from data.functions.HolderTableFunction import holder_table_function
+from IzomaFunction import izoma_function
+from MathiasFunction import mathias_function
+from SphereFunction import sphere_function

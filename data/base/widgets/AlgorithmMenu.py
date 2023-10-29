@@ -34,7 +34,16 @@ class AlgorithmMenu(QVBoxLayout):
             "Бактериальная оптимизация": Bacterial_optimization.Bacterial_optimization(),
             "Гибридный алгоритм": Hybrid_algorithm.Hybrid_algorithm()
         }
-
+        self.layout_index_dict = {
+            0: Gradient_descent.Gradient_descent(),
+            1: Quadratic_programming.Quadratic_programming(),
+            2: Rosenbrock_function.Rosenbrock_function(),
+            3: Swarm_of_particles.Swarm_of_particles(),
+            4: Bee_optimization.Bee_optimization(),
+            5: Artificial_immune_network.Artificial_immune_network(),
+            6: Bacterial_optimization.Bacterial_optimization(),
+            7: Hybrid_algorithm.Hybrid_algorithm()
+        }
         # ----------------- Labels ----------------- #
 
         self.stacked_layout = QStackedLayout()
@@ -50,7 +59,7 @@ class AlgorithmMenu(QVBoxLayout):
         # ---------------- Button ---------------- #
         self.start_button = QPushButton("Выполнить")
         self.start_button.setCheckable(True)
-        self.start_button.clicked.connect(self.collect_data)
+        self.start_button.clicked.connect(self.start_process)
 
         self.addWidget(self.start_button)
 
@@ -86,25 +95,16 @@ class AlgorithmMenu(QVBoxLayout):
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
             self.process.start("python3", ['gradient_descent.py'])
+            self.collect_data()
 
     def process_finished(self):
         self.message("Process finished.")
         self.process = None
 
-    @pyqtSlot(float, float, float, float, float)
-    def collect_data(self, x=None, y=None, step=None, iterations=None, delay=None):
+    @pyqtSlot(list)
+    def collect_data(self, arr):
         index = self.stacked_layout.currentIndex()
 
-        layouts = {
-            0: Gradient_descent.Gradient_descent,
-            1: Quadratic_programming.Quadratic_programming,
-            2: Rosenbrock_function.Rosenbrock_function,
-            3: Swarm_of_particles.Swarm_of_particles,
-            4: Bee_optimization.Bee_optimization,
-            5: Artificial_immune_network.Artificial_immune_network,
-            6: Bacterial_optimization.Bacterial_optimization,
-            7: Hybrid_algorithm.Hybrid_algorithm
-        }
         layout_functions = {
             0: gradient_descent.gradient_descent
             # 1: quadratic_programming.quadratic_programming,
@@ -116,13 +116,13 @@ class AlgorithmMenu(QVBoxLayout):
             # 7: hybrid_algorithm.hybrid_algorithm
         }
 
-        selected_layout = layouts.get(index)
+        selected_layout = self.layout_index_dict.get(index)
         selected_function = layout_functions.get(index)
 
         if selected_function:
-            best = selected_function(x, y, step, iterations, delay)
-            print(best)
-            # self.data_changed.emit(best)
+            data = selected_layout.collect_data_layout()
+            best = selected_function(some_func, data[0], data[1], data[2], data[3])
+            self.data_changed.emit(best)
         else:
             print("необходимый layout не найден!")
 
