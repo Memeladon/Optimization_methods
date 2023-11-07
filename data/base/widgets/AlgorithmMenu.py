@@ -153,31 +153,31 @@ class AlgorithmMenu(QVBoxLayout):
     def delay_alg(self):
         clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
         print('Задержка:' + str(clear))
-        return clear
+        return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (X)
     def x_alg(self):
         clear = self.lineEditX.text().replace(' ', '')
         print('X:' + str(clear))
-        return clear
+        return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Y)
     def y_alg(self):
         clear = self.lineEditY.text().replace(' ', '').replace(',', '.')
         print('Y:' + str(clear))
-        return clear
+        return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Steps)
     def step_alg(self):
         clear = self.lineEdit_first_step.text().replace(' ', '').replace(',', '.')
         print('Начальный шаг:' + str(clear))
-        return clear
+        return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Iterations)
     def iter_alg(self):
         clear = self.lineEdit_iterations.text().replace(' ', '').replace(',', '.')
         print('Число итераций:' + str(clear))
-        return clear
+        return int(clear)
 
     def message(self, s):
         self.console.appendPlainText(s)
@@ -212,12 +212,13 @@ class AlgorithmMenu(QVBoxLayout):
             elif alg_name == "Гибридный алгоритм":
                 result = None
 
+            print(result)
             self.points.emit(result)
 
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
 
             # self.process.start("python3", ['gradient_descent.py'])
-            # self.process_finished()
+            self.process_finished()
 
     def process_finished(self):
         self.message("Конец выполнения.")
