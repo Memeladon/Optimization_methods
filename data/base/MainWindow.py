@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
         # Правая часть окна (часть с настройками)
         self.algorithm_menu = AlgorithmMenu(self.left_layout)
-        self.functions_menu.func_name.connect(self.algorithm_menu.update_canvas)
+        self.functions_menu.func_name.connect(self.algorithm_menu.change_func)
 
         self.right_layout.addLayout(self.algorithm_menu)
         self.right_layout.addLayout(self.functions_menu)

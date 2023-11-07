@@ -195,21 +195,21 @@ class AlgorithmMenu(QVBoxLayout):
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
 
             if alg_name == "Градиентный спуск":
-                return gradient_descent(self.functions_dict[self.function], x, y, tk, M)
+                result = gradient_descent(self.functions_dict[self.function], x, y, tk, M)
             elif alg_name == "Квадратичное программирование":
-                return
+                result = None
             elif alg_name == "Функция Розенброкка":
-                return
+                result = None
             elif alg_name == "Рой частиц":
-                return
+                result = None
             elif alg_name == "Пчелиная оптимизация":
-                return
+                result = None
             elif alg_name == "Искусственная имунная сеть":
-                return
+                result = None
             elif alg_name == "Бактериальная оптимизация":
-                return
+                result = None
             elif alg_name == "Гибридный алгоритм":
-                return
+                result = None
 
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
 
