@@ -13,6 +13,7 @@ from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, Mat
 
 class AlgorithmMenu(QVBoxLayout):
     data_changed = pyqtSignal(list)
+    points = pyqtSignal(list)
     function = 'Функция Химмельблау'
 
     def __init__(self, math_layout):
@@ -210,6 +211,8 @@ class AlgorithmMenu(QVBoxLayout):
                 result = None
             elif alg_name == "Гибридный алгоритм":
                 result = None
+
+            self.points.emit(result)
 
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
 

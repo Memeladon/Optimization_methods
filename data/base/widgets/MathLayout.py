@@ -66,9 +66,14 @@ class MathLayout(QVBoxLayout):
     # @pyqtSlot(list)
     # def algorithms_execution(self, x, y, step, iterations, delay, selected_algorithm):
 
-    def plot_points(self, x, y, z, color='r', marker='o'):
-        self.canvas.ax.scatter(x, y, z, c=color, marker=marker)
-        self.canvas.draw()
+    @pyqtSlot(list)
+    def plot_points(self, result):
+        for _ in result:
+            x = result[1]
+            y = result[2]
+            z = result[3]
+            self.canvas.ax.scatter(x, y, z, c='r', marker='o')
+            self.canvas.draw()
 
     def clear_plot(self):
         self.canvas.ax.clear()

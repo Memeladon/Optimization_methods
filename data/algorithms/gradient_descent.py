@@ -11,8 +11,6 @@ def partial_function(f___, input, pos, value):
 
 
 def gradient(function, input):
-    """Частная производная по каждому из параметров функции f(т.е. градиент)"""
-
     ret = np.empty(len(input))
     for i in range(len(input)):
         fg = lambda x: partial_function(function, input, i, x)
@@ -25,36 +23,38 @@ def next_point(x, y, gx, gy, step) -> tuple:
 
 
 def gradient_descent(function, x0, y0, tk, M):
-    yield x0, y0, 0, function(x0, y0)
+    result = [(0, x0, y0, function(x0, y0))]
 
     e1 = 0.0001
     e2 = 0.0001
 
     k = 0
     while True:
+        (gx, gy) = gradient(function, [x0, y0])
 
-        (gx, gy) = gradient(function, [x0, y0])  # 3
-
-        if np.linalg.norm((gx, gy)) < e1:  # Шаг 4. Проверить выполнение критерия окончания
+        if np.linalg.norm((gx, gy)) < e1:
             break
 
-        if k >= M:  # Шаг 5
+        if k >= M:
             break
 
-        x1, y1 = next_point(x0, y0, gx, gy, tk)  # 7
+        x1, y1 = next_point(x0, y0, gx, gy, tk)
         f1 = function(x1, y1)
         f0 = function(x0, y0)
 
-        while not f1 < f0:  # 8 условие
+        while not f1 < f0:
             tk = tk / 2
             x1, y1 = next_point(x0, y0, gx, gy, tk)
             f1 = function(x1, y1)
             f0 = function(x0, y0)
 
-        if np.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2) < e2 and abs(f1 - f0) < e2:  # 9
+        if np.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2) < e2 and abs(f1 - f0) < e2:
             x0, y0 = x1, y1
+            result.append((k, x0, y0, f1))
             break
         else:
             k += 1
             x0, y0 = x1, y1
-            yield x0, y0, k, f1
+            result.append((k, x0, y0, f1))
+
+    return result
