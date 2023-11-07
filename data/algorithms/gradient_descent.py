@@ -25,8 +25,6 @@ def next_point(x, y, gx, gy, step) -> tuple:
 
 
 def gradient_descent(function, x0, y0, tk, M):
-
-
     yield x0, y0, 0, function(x0, y0)
 
     e1 = 0.0001
@@ -47,8 +45,6 @@ def gradient_descent(function, x0, y0, tk, M):
         f1 = function(x1, y1)
         f0 = function(x0, y0)
 
-
-
         while not f1 < f0:  # 8 условие
             tk = tk / 2
             x1, y1 = next_point(x0, y0, gx, gy, tk)
@@ -62,4 +58,3 @@ def gradient_descent(function, x0, y0, tk, M):
             k += 1
             x0, y0 = x1, y1
             yield x0, y0, k, f1
-

@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout, QLabel, QLine
 
 
 class Gradient_descent(QHBoxLayout):
-    data_changed = pyqtSignal(list)
+    data_out = pyqtSignal(list)
 
     def __init__(self):
         super(Gradient_descent, self).__init__()
@@ -38,60 +38,45 @@ class Gradient_descent(QHBoxLayout):
         self.lineEdit_iterations.textChanged[str].connect(self.iter_alg)
         self.label_iterations.setBuddy(self.lineEdit_iterations)
 
-        # ЗАДЕРЖКА
-        self.label_delay = QLabel('&Задержка')
-        self.label_delay.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEdit_delay = QLineEdit('0.5')
-        self.lineEdit_delay.textChanged[str].connect(self.changed)
-        self.label_delay.setBuddy(self.lineEdit_delay)
-
         grid_layout.addWidget(self.label_x, 0, 0)
         grid_layout.addWidget(self.lineEditX, 0, 1)
         grid_layout.addWidget(self.label_y, 1, 0)
         grid_layout.addWidget(self.lineEditY, 1, 1)
         grid_layout.addWidget(self.label_first_step, 2, 0)
         grid_layout.addWidget(self.label_iterations, 3, 0)
-        grid_layout.addWidget(self.label_delay, 4, 0)
         grid_layout.addWidget(self.lineEdit_first_step, 2, 1)
         grid_layout.addWidget(self.lineEdit_iterations, 3, 1)
-        grid_layout.addWidget(self.lineEdit_delay, 4, 1)
 
         self.addLayout(grid_layout)
 
-    def changed(self, changed_info):
-        clear = changed_info.replace(' ', '')
-        print(clear)
+        # self.collect_data_layout()
 
     # Функция обрабатывающая изменения в строке алгоритмов (X)
     def x_alg(self):
-        clear = self.lineEditX.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
-        xs = clear.split()
-        print('X:' + str(xs))
-        return xs
+        clear = self.lineEditX.text().replace(' ', '')
+        print('X:' + str(clear))
+        self.collect_data_layout()
+        return clear
 
     # Функция обрабатывающая изменения в строке алгоритмов (Y)
     def y_alg(self):
-        clear = self.lineEditY.text().replace('(', '').replace(')', '').replace(' ', '').replace(';', ' ')
-        ys = clear.split()
-        print('Y:' + str(ys))
-        return ys
+        clear = self.lineEditY.text().replace(' ', '').replace(',', '.')
+        print('Y:' + str(clear))
+        self.collect_data_layout()
+        return clear
 
     # Функция обрабатывающая изменения в строке алгоритмов (Steps)
     def step_alg(self):
         clear = self.lineEdit_first_step.text().replace(' ', '').replace(',', '.')
         print('Начальный шаг:' + str(clear))
+        self.collect_data_layout()
         return clear
 
     # Функция обрабатывающая изменения в строке алгоритмов (Iterations)
     def iter_alg(self):
-        clear = self.lineEdit_iterations.text().replace(' ', '')
+        clear = self.lineEdit_iterations.text().replace(' ', '').replace(',', '.')
         print('Число итераций:' + str(clear))
-        return clear
-
-    # Функция обрабатывающая изменения в строке алгоритмов (Delay)
-    def delay_alg(self):
-        clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
-        print('Задержка:' + str(clear))
+        self.collect_data_layout()
         return clear
 
     def collect_data_layout(self):
@@ -99,8 +84,6 @@ class Gradient_descent(QHBoxLayout):
         y = self.y_alg()
         first_step = self.step_alg()
         amount_iter = self.iter_alg()
-        delay = self.delay_alg()
 
-        data = [x, y, first_step, amount_iter, delay]
-        self.data_changed.emit(data)
-        return data
+        data = [x, y, first_step, amount_iter]
+        self.data_out.emit(data)

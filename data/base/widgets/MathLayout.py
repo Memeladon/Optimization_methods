@@ -19,6 +19,7 @@ class MplCanvas(FigureCanvas):
 
 
 class MathLayout(QVBoxLayout):
+
     def __init__(self):
         super().__init__()
 

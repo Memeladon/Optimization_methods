@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QVBoxLayout, QComboBox, QLabel, QLineEdit, QHBoxLayo
 class FunctionsMenu(QVBoxLayout):
     # Дата, которую мы отправляем
     data_changed = pyqtSignal(list, list, str, int)
+    func_name = pyqtSignal(str)
 
     def __init__(self):
         super(FunctionsMenu, self).__init__()
@@ -14,7 +15,7 @@ class FunctionsMenu(QVBoxLayout):
                    "Табличная функция Хольдера"]
         self.choose_methods = QComboBox()
         self.choose_methods.addItems(methods)
-        # self.choose_methods.currentIndexChanged.connect(self.function_changed)
+        self.choose_methods.currentTextChanged.connect(self.function_changed)
 
         self.addWidget(self.choose_methods)
 
@@ -118,4 +119,8 @@ class FunctionsMenu(QVBoxLayout):
         # Устанавливаем первую функцию из списка
         self.choose_methods.setCurrentIndex(0)
         # Вызываем метод для обновления canvas
+        self.func_name.emit(self.choose_methods.currentText())
         self.update_canvas_button()
+
+    def function_changed(self, name):
+        self.func_name.emit(name)
