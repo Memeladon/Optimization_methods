@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QPlai
 from data.base.layouts import (Artificial_immune_network, Bacterial_optimization, Bee_optimization, Gradient_descent,
                                Hybrid_algorithm, Quadratic_programming, Rosenbrock_function, Swarm_of_particles)
 
-from data.algorithms import (gradient_descent)
+from data.algorithms import (gradient_descent, get_points)
 
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
                             AckleyFunction)
@@ -222,7 +222,7 @@ class AlgorithmMenu(QVBoxLayout):
             if alg_name == "Градиентный спуск":
                 result = gradient_descent(self.functions_dict[self.function], x, y, tk, M)
             elif alg_name == "Квадратичное программирование":
-                result = None
+                result = get_points(x, y)
             elif alg_name == "Функция Розенброкка":
                 result = None
             elif alg_name == "Рой частиц":

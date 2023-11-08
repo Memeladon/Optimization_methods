@@ -23,7 +23,7 @@ def next_point(x, y, gx, gy, step) -> tuple:
 
 
 def gradient_descent(function, x0, y0, tk, M):
-    result = [(0, x0, y0, function(x0, y0))]
+    result = [(x0, y0, function(x0, y0))]
 
     e1 = 0.0001
     e2 = 0.0001
@@ -50,11 +50,11 @@ def gradient_descent(function, x0, y0, tk, M):
 
         if np.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2) < e2 and abs(f1 - f0) < e2:
             x0, y0 = x1, y1
-            result.append((k, x0, y0, f1))
+            result.append((x0, y0, f1))
             break
         else:
             k += 1
             x0, y0 = x1, y1
-            result.append((k, x0, y0, f1))
+            result.append((x0, y0, f1))
 
     return result

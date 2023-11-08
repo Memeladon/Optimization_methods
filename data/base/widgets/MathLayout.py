@@ -16,6 +16,18 @@ class MplCanvas(FigureCanvas):
         self.mpl_connect('button_press_event', self.ax._button_press)
         self.mpl_connect('button_release_event', self.ax._button_release)
         self.mpl_connect('motion_notify_event', self.ax._on_move)
+        self.mpl_connect('scroll_event', self.on_scroll)
+
+        self.pressed = False
+        self.lastx = None
+        self.lasty = None
+
+    def on_scroll(self, event):
+        if event.button == 'up':
+            self.ax.dist += 1
+        elif event.button == 'down':
+            self.ax.dist -= 1
+        self.draw()
 
 
 class MathLayout(QVBoxLayout):
@@ -43,11 +55,11 @@ class MathLayout(QVBoxLayout):
             print('himmelblau')
         elif selected_function == 1:
             X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='Greys')
             print('sphere_function')
         elif selected_function == 2:
             X, Y, Z = mathias_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='Greys')
             print('mathias_function')
             self.canvas.draw()
         elif selected_function == 3:
@@ -82,8 +94,8 @@ class MathLayout(QVBoxLayout):
 
     def update_plot(self):
         if self.index < len(self.points_to_plot):
-            _, x, y, z = self.points_to_plot[self.index]
-            self.canvas.ax.scatter(x, y, z+10, c='r', marker='o')
+            x, y, z = self.points_to_plot[self.index]
+            self.canvas.ax.scatter(x, y, z + 10, c='r', marker='o')
             self.canvas.draw()
             self.index += 1
         else:

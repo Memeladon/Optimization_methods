@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def f(xgrid, ygrid):
     return 2 * np.power(xgrid, 2) + 3 * np.power(ygrid, 2) + (4 * xgrid * ygrid) - (6 * xgrid) - (3 * ygrid)
     # return xgrid ** 2 + ygrid ** 2
@@ -80,17 +81,19 @@ def simplex_method(x1, x2):
     y_min = round(y_min, 2)
     return triangle, x_min, y_min, z_min
 
-def get_points(start_x,start_y):
-    triangle, x_min, z_min,y_min = simplex_method(start_x,start_y)
+
+def get_points(start_x, start_y):
+    triangle, x_min, z_min, y_min = simplex_method(start_x, start_y)
     points = []
     for tr in triangle:
-        if min(tr)[1] >y_min:
+        if min(tr)[1] > y_min:
             point = [tr[0][0], tr[0][1], min(tr)[1]]
             points.append(point)
         else:
-            points.append([x_min, y_min,z_min])
+            points.append([x_min, y_min, z_min])
             break
     return points
 
-points = get_points(10,2)
-print(points)
+
+points = get_points(10, 2)
+# print(points)
