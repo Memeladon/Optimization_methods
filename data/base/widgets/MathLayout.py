@@ -1,4 +1,4 @@
-from PyQt6.QtCore import pyqtSlot
+from PyQt6.QtCore import pyqtSlot, QTimer
 from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -27,6 +27,11 @@ class MathLayout(QVBoxLayout):
         self.canvas = MplCanvas()
         self.addWidget(self.canvas)
         # self.bar = None
+
+        # Инициализация таймера для обновления графика
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_plot)
+        self.interval = 3000  # Интервал времени в миллисекундах (здесь 1 секунда)
 
     # Отрисовка графиков их FunctionMenu
     @pyqtSlot(list, list, str, int)
@@ -63,17 +68,27 @@ class MathLayout(QVBoxLayout):
         else:
             print('Выход за предел выбора функции')
 
-    # @pyqtSlot(list)
-    # def algorithms_execution(self, x, y, step, iterations, delay, selected_algorithm):
+    def start_timer(self):
+        self.timer.start(self.interval)
+
+    def stop_timer(self):
+        self.timer.stop()
 
     @pyqtSlot(list)
+    @pyqtSlot(list)
     def plot_points(self, result):
-        for _ in result:
-            x = result[1]
-            y = result[2]
-            z = result[3]
+        self.points_to_plot = result
+        self.index = 0
+        self.start_timer()
+
+    def update_plot(self):
+        if self.index < len(self.points_to_plot):
+            _, x, y, z = self.points_to_plot[self.index]
             self.canvas.ax.scatter(x, y, z, c='r', marker='o')
             self.canvas.draw()
+            self.index += 1
+        else:
+            self.stop_timer()
 
     def clear_plot(self):
         self.canvas.ax.clear()
