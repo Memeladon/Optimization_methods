@@ -1,3 +1,5 @@
+import re
+
 from PyQt6.QtCore import QProcess, pyqtSignal, pyqtSlot, Qt
 from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QPlainTextEdit, QStackedLayout, QLabel,
                              QLineEdit, QGridLayout)
@@ -105,14 +107,14 @@ class AlgorithmMenu(QVBoxLayout):
         grid_layout.addWidget(self.label_y, 1, 0)
         grid_layout.addWidget(self.lineEditY, 1, 1)
 
-        grid_layout.addWidget(self.label_delay, 2, 1)
-        grid_layout.addWidget(self.lineEdit_delay, 2, 1)
+        grid_layout.addWidget(self.label_first_step, 2, 0)
+        grid_layout.addWidget(self.lineEdit_first_step, 2, 1)
 
-        grid_layout.addWidget(self.label_first_step, 3, 0)
-        grid_layout.addWidget(self.lineEdit_first_step, 3, 1)
+        grid_layout.addWidget(self.label_iterations, 3, 0)
+        grid_layout.addWidget(self.lineEdit_iterations, 3, 1)
 
-        grid_layout.addWidget(self.label_iterations, 4, 0)
-        grid_layout.addWidget(self.lineEdit_iterations, 4, 1)
+        grid_layout.addWidget(self.label_delay, 4, 0)
+        grid_layout.addWidget(self.lineEdit_delay, 4, 1)
 
         self.addLayout(grid_layout)
 
@@ -151,33 +153,55 @@ class AlgorithmMenu(QVBoxLayout):
 
     # Функция обрабатывающая изменения в строке алгоритмов (Delay)
     def delay_alg(self):
-        clear = self.lineEdit_delay.text().replace(' ', '').replace(',', '.')
-        print('Задержка:' + str(clear))
+        input_text = self.lineEdit_delay.text()
+        clear = self.process_input_text(input_text)
+        print('Задержка: ' + str(clear))
         return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (X)
     def x_alg(self):
-        clear = self.lineEditX.text().replace(' ', '')
-        print('X:' + str(clear))
+        input_text = self.lineEditX.text()
+        clear = self.process_input_text(input_text)
+        print('X: ' + str(clear))
         return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Y)
     def y_alg(self):
-        clear = self.lineEditY.text().replace(' ', '').replace(',', '.')
-        print('Y:' + str(clear))
+        input_text = self.lineEditY.text()
+        clear = self.process_input_text(input_text)
+        print('Y: ' + str(clear))
         return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Steps)
     def step_alg(self):
-        clear = self.lineEdit_first_step.text().replace(' ', '').replace(',', '.')
-        print('Начальный шаг:' + str(clear))
+        input_text = self.lineEdit_first_step.text()
+        clear = self.process_input_text(input_text)
+        print('Начальный шаг: ' + str(clear))
         return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Iterations)
     def iter_alg(self):
-        clear = self.lineEdit_iterations.text().replace(' ', '').replace(',', '.')
-        print('Число итераций:' + str(clear))
+        input_text = self.lineEdit_iterations.text()
+        clear = self.process_input_text(input_text)
+        print('Число итераций: ' + str(clear))
         return int(clear)
+
+    def process_input_text(self, input_text):
+        # Очистка текста от недопустимых символов с помощью регулярного выражения
+        clear_text = re.sub(r'[^\d-]', '', input_text)
+
+        # Удаление лишних знаков минус и точек
+
+        clear_text = re.sub(r'(?!^\d)|\.(?=(.*\.)+)', '', clear_text)
+
+        if clear_text == '' or clear_text == '-':
+            return '0'
+
+        # Первый символ должен быть цифрой или минусом
+        if clear_text and not clear_text[0].isdigit() and clear_text[0] != '-':
+            clear_text = clear_text[1:]
+
+        return clear_text
 
     def message(self, s):
         self.console.appendPlainText(s)

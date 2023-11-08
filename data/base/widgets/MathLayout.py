@@ -31,7 +31,7 @@ class MathLayout(QVBoxLayout):
         # Инициализация таймера для обновления графика
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_plot)
-        self.interval = 3000  # Интервал времени в миллисекундах (здесь 1 секунда)
+        self.interval = 1000  # Интервал времени в миллисекундах (здесь 1 секунда)
 
     # Отрисовка графиков их FunctionMenu
     @pyqtSlot(list, list, str, int)
@@ -39,7 +39,7 @@ class MathLayout(QVBoxLayout):
         self.clear_plot()
         if selected_function == 0:
             X, Y, Z = himmelblau(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='Greys')
             print('himmelblau')
         elif selected_function == 1:
             X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
@@ -75,7 +75,6 @@ class MathLayout(QVBoxLayout):
         self.timer.stop()
 
     @pyqtSlot(list)
-    @pyqtSlot(list)
     def plot_points(self, result):
         self.points_to_plot = result
         self.index = 0
@@ -84,7 +83,7 @@ class MathLayout(QVBoxLayout):
     def update_plot(self):
         if self.index < len(self.points_to_plot):
             _, x, y, z = self.points_to_plot[self.index]
-            self.canvas.ax.scatter(x, y, z, c='r', marker='o')
+            self.canvas.ax.scatter(x, y, z+10, c='r', marker='o')
             self.canvas.draw()
             self.index += 1
         else:
