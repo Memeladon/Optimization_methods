@@ -15,7 +15,7 @@ from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, Mat
 
 class AlgorithmMenu(QVBoxLayout):
     data_changed = pyqtSignal(list)
-    points = pyqtSignal(list)
+    points = pyqtSignal(list, float)
     function = 'Функция Химмельблау'
 
     def __init__(self, math_layout):
@@ -210,6 +210,7 @@ class AlgorithmMenu(QVBoxLayout):
         if self.process is None:  # Если текущего процесса нет.
             # data = self.collect_data()
 
+            delay = self.delay_alg() * 1000
             x = self.x_alg()
             y = self.y_alg()
             tk = self.step_alg()  # Начальный шаг
@@ -237,7 +238,7 @@ class AlgorithmMenu(QVBoxLayout):
                 result = None
 
             print(result)
-            self.points.emit(result)
+            self.points.emit(result, delay)
 
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
 

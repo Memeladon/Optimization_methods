@@ -51,30 +51,30 @@ class MathLayout(QVBoxLayout):
         self.clear_plot()
         if selected_function == 0:
             X, Y, Z = himmelblau(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='Greys')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('himmelblau')
         elif selected_function == 1:
             X, Y, Z = sphere_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='Greys')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('sphere_function')
         elif selected_function == 2:
             X, Y, Z = mathias_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='Greys')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('mathias_function')
             self.canvas.draw()
         elif selected_function == 3:
             X, Y, Z = izoma_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('izoma_function')
             self.canvas.draw()
         elif selected_function == 4:
             X, Y, Z = ackley_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('ackley_function')
             self.canvas.draw()
         elif selected_function == 5:
             X, Y, Z = holder_table_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet')
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('holder_table_function')
             self.canvas.draw()
         else:
@@ -86,16 +86,17 @@ class MathLayout(QVBoxLayout):
     def stop_timer(self):
         self.timer.stop()
 
-    @pyqtSlot(list)
-    def plot_points(self, result):
+    @pyqtSlot(list, float)
+    def plot_points(self, result, delay):
         self.points_to_plot = result
         self.index = 0
+        self.interval = delay
         self.start_timer()
 
     def update_plot(self):
         if self.index < len(self.points_to_plot):
             x, y, z = self.points_to_plot[self.index]
-            self.canvas.ax.scatter(x, y, z + 10, c='r', marker='o')
+            self.canvas.ax.scatter(x, y, z, c='r', marker='o')
             self.canvas.draw()
             self.index += 1
         else:
