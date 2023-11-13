@@ -1,21 +1,17 @@
 import re
 
 from PyQt6.QtCore import QProcess, pyqtSignal, pyqtSlot, Qt
-from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QPlainTextEdit, QStackedLayout, QLabel,
+from PyQt6.QtWidgets import (QVBoxLayout, QComboBox, QPushButton, QPlainTextEdit, QLabel,
                              QLineEdit, QGridLayout)
 
-from data.base.layouts import (Artificial_immune_network, Bacterial_optimization, Bee_optimization, Gradient_descent,
-                               Hybrid_algorithm, Quadratic_programming, Rosenbrock_function, Swarm_of_particles)
-
 from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algorithm)
-
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
                             AckleyFunction)
 
 
 class AlgorithmMenu(QVBoxLayout):
     data_changed = pyqtSignal(list)
-    points = pyqtSignal(list, float)
+    points = pyqtSignal(list, float, object)
     function = 'Функция Химмельблау'
 
     def __init__(self, math_layout):
@@ -28,7 +24,7 @@ class AlgorithmMenu(QVBoxLayout):
                       "Бактериальная оптимизация", "Гибридный алгоритм"]
         self.choose_algorithm = QComboBox()
         self.choose_algorithm.addItems(algorithms)
-        # self.choose_algorithm.currentIndexChanged.connect(self.algorithm_changed)
+        self.choose_algorithm.currentIndexChanged.connect(self.algorithm_changed)
         self.addWidget(self.choose_algorithm)
 
         self.functions_dict = {
@@ -105,7 +101,7 @@ class AlgorithmMenu(QVBoxLayout):
         self.label_population_size = QLabel('&Размер популяций')
         self.label_population_size.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.lineEdit_population_size = QLineEdit('50')
-        self.lineEdit_population_size.textChanged[str].connect(self.iter_alg)
+        self.lineEdit_population_size.textChanged[str].connect(self.population_size_alg)
         self.label_population_size.setBuddy(self.lineEdit_population_size)
 
         self.label_population_size.setDisabled(True)
@@ -115,7 +111,7 @@ class AlgorithmMenu(QVBoxLayout):
         self.label_num_generations = QLabel('&Количество поколений')
         self.label_num_generations.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.lineEdit_num_generations = QLineEdit('100')
-        self.lineEdit_num_generations.textChanged[str].connect(self.delay_alg)
+        self.lineEdit_num_generations.textChanged[str].connect(self.num_generations_alg)
         self.label_num_generations.setBuddy(self.lineEdit_num_generations)
 
         self.label_num_generations.setDisabled(True)
@@ -147,17 +143,17 @@ class AlgorithmMenu(QVBoxLayout):
 
         # ---------------- Button ---------------- #
         self.start_button = QPushButton("Выполнить")
-        self.start_button.setCheckable(True)
         self.start_button.clicked.connect(self.start_process)
-
         self.addWidget(self.start_button)
+
+        self.stop_button = QPushButton("Остановить")
+        self.stop_button.clicked.connect(self.stop_process)  # Corrected this line
+        self.addWidget(self.stop_button)
 
         # --------------- Console --------------- #
         self.process = None  # Значение текущего процесса
-
         self.console = QPlainTextEdit()
         self.console.setReadOnly(True)
-
         self.addWidget(self.console)
 
         # self.layout_dict["Градиентный спуск"].data_out.connect(self.collect_data)
@@ -176,12 +172,30 @@ class AlgorithmMenu(QVBoxLayout):
     #         print("Реализация алгоритма не найдена!")
     #     # if index == 0:
 
-    # Консольные функции
+    def algorithm_changed(self, index):
+        print(index)
+        if index == 3:
+            self.label_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setDisabled(False)
+
+            self.label_population_size.setDisabled(False)
+            self.lineEdit_population_size.setDisabled(False)
+        elif index == 2:
+            self.label_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setText('650')
+
+            self.label_population_size.setDisabled(False)
+            self.lineEdit_population_size.setDisabled(False)
+            self.lineEdit_population_size.setText('100')
 
     # Функция обрабатывающая изменения в строке алгоритмов (Delay)
     def delay_alg(self):
         input_text = self.lineEdit_delay.text()
         clear = self.process_input_text(input_text)
+        # Тут еще дописать обработку надо (или переделать 'process_input_text')
+        if clear[0] == '0':
+            clear = clear[:1] + '.' + clear[1:]
         print('Задержка: ' + str(clear))
         return float(clear)
 
@@ -249,6 +263,7 @@ class AlgorithmMenu(QVBoxLayout):
 
         return clear_text
 
+    # Консольные функции
     def message(self, s):
         self.console.appendPlainText(s)
 
@@ -284,12 +299,14 @@ class AlgorithmMenu(QVBoxLayout):
 
                 result = arr_points
             elif alg_name == "Рой частиц":
-                a = Swarm(650, 0.1, 1, 5, 100, self.functions_dict[self.function], -5, 5)
+                a = Swarm(population_size, 0.1, 1, 5, num_generations,
+                          self.functions_dict[self.function], -5, 5)
                 points = a.startSwarm()
 
                 print("РЕЗУЛЬТАТ:", a.globalBestScore, "В ТОЧКЕ:", a.globalBestPos)
                 print(points)
                 result = points
+
             elif alg_name == "Пчелиная оптимизация":
                 result = None
             elif alg_name == "Искусственная имунная сеть":
@@ -299,16 +316,18 @@ class AlgorithmMenu(QVBoxLayout):
             elif alg_name == "Гибридный алгоритм":
                 result = None
 
-            self.points.emit(result, delay)
-
+            self.message('x, y, z')
+            self.points.emit(result, delay, self.message)
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
-
-            # self.process.start("python3", ['gradient_descent.py'])
             self.process_finished()
 
     def process_finished(self):
-        self.message("Конец выполнения.")
         self.process = None
+
+    def stop_process(self):
+        if self.process is not None and self.process.state() == QProcess.Running:
+            self.process.kill()
+            self.message("Процесс остановлен.")
 
     @pyqtSlot(str)
     def change_func(self, name):

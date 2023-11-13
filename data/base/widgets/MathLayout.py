@@ -1,3 +1,4 @@
+import numpy as np
 from PyQt6.QtCore import pyqtSlot, QTimer
 from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -16,18 +17,24 @@ class MplCanvas(FigureCanvas):
         self.mpl_connect('button_press_event', self.ax._button_press)
         self.mpl_connect('button_release_event', self.ax._button_release)
         self.mpl_connect('motion_notify_event', self.ax._on_move)
-        self.mpl_connect('scroll_event', self.on_scroll)
+        # self.mpl_connect('scroll_event', self.on_scroll)
 
         self.pressed = False
         self.lastx = None
         self.lasty = None
-
-    def on_scroll(self, event):
-        if event.button == 'up':
-            self.ax.dist += 1
-        elif event.button == 'down':
-            self.ax.dist -= 1
-        self.draw()
+    #
+    # def on_scroll(self, event):
+    #     print(event.button, event.step)
+    #     increment = 1 if event.button == 'up' else -1
+    #     max_index = self.X.shape[-1] - 1
+    #     self.index = np.clip(self.index + increment, 0, max_index)
+    #     self.update()
+    #
+    # def update(self):
+    #     self.im.set_data(self.X[:, :, self.index])
+    #     self.ax.set_title(
+    #         f'Use scroll wheel to navigate\nindex {self.index}')
+    #     self.im.axes.figure.canvas.draw()
 
 
 class MathLayout(QVBoxLayout):
@@ -69,7 +76,7 @@ class MathLayout(QVBoxLayout):
             self.canvas.draw()
         elif selected_function == 4:
             X, Y, Z = ackley_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
+            self.canvas.ax.plot_surface(X, Y, Z-1, cmap='jet', alpha=0.5)
             print('ackley_function')
             self.canvas.draw()
         elif selected_function == 5:
@@ -86,21 +93,24 @@ class MathLayout(QVBoxLayout):
     def stop_timer(self):
         self.timer.stop()
 
-    @pyqtSlot(list, float)
-    def plot_points(self, result, delay):
+    @pyqtSlot(list, float, object)
+    def plot_points(self, result, delay, message):
         self.points_to_plot = result
         self.index = 0
         self.interval = int(delay)
+        self.console = message
 
         self.start_timer()
 
     def update_plot(self):
         if self.index < len(self.points_to_plot):
             x, y, z = self.points_to_plot[self.index]
+            self.console(f'{round(x, 4),round(y,4),round(z,4)}')
             self.canvas.ax.scatter(x, y, z, c='r', marker='o')
             self.canvas.draw()
             self.index += 1
         else:
+            self.console("Конец выполнения.")
             self.stop_timer()
 
     def clear_plot(self):

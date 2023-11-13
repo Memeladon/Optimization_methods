@@ -123,4 +123,11 @@ class FunctionsMenu(QVBoxLayout):
         self.update_canvas_button()
 
     def function_changed(self, name):
+        if name == 'Табличная функция Хольдера' or 'Функция Экли':
+            self.lineEditX.setText('(-10;10)')
+            self.lineEditY.setText('(-10;10)')
+        else:
+            self.lineEditX.setText('(-5;5)')
+            self.lineEditY.setText('(-5;5)')
+
         self.func_name.emit(name)
