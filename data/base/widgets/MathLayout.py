@@ -86,21 +86,24 @@ class MathLayout(QVBoxLayout):
     def stop_timer(self):
         self.timer.stop()
 
-    @pyqtSlot(list, float)
-    def plot_points(self, result, delay):
+    @pyqtSlot(list, float, object)
+    def plot_points(self, result, delay, message):
         self.points_to_plot = result
         self.index = 0
         self.interval = int(delay)
+        self.console = message
 
         self.start_timer()
 
     def update_plot(self):
         if self.index < len(self.points_to_plot):
             x, y, z = self.points_to_plot[self.index]
+            self.console(f'{round(x, 4),round(y,4),round(z,4)}')
             self.canvas.ax.scatter(x, y, z, c='r', marker='o')
             self.canvas.draw()
             self.index += 1
         else:
+            self.console("Конец выполнения.")
             self.stop_timer()
 
     def clear_plot(self):

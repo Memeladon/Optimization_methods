@@ -116,6 +116,7 @@ class Swarm:
 
     def startSwarm(self):
         """ Метод для запуска алгоритма"""
+
         dataForGIF = []
         for _ in range(self.numbersOfLife):
             oneDataX = []
@@ -131,8 +132,8 @@ class Swarm:
             dataForGIF.append([oneDataX, oneDataY])
 
         # рисуем gif
-        fnames = []
-        i = 0
+        # fnames = []
+        # i = 0
         # dataForGIF = []
         points = []
         for x, y in dataForGIF:
