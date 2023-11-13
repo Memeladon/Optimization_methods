@@ -43,7 +43,7 @@ class MathLayout(QVBoxLayout):
         # Инициализация таймера для обновления графика
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_plot)
-        self.interval = 1000  # Интервал времени в миллисекундах (здесь 1 секунда)
+        self.interval = 3000  # Интервал времени в миллисекундах (здесь 1 секунда)
 
     # Отрисовка графиков их FunctionMenu
     @pyqtSlot(list, list, str, int)
@@ -90,7 +90,8 @@ class MathLayout(QVBoxLayout):
     def plot_points(self, result, delay):
         self.points_to_plot = result
         self.index = 0
-        self.interval = delay
+        self.interval = int(delay)
+
         self.start_timer()
 
     def update_plot(self):

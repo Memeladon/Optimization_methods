@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (QVBoxLayout, QWidget, QComboBox, QPushButton, QPlai
 from data.base.layouts import (Artificial_immune_network, Bacterial_optimization, Bee_optimization, Gradient_descent,
                                Hybrid_algorithm, Quadratic_programming, Rosenbrock_function, Swarm_of_particles)
 
-from data.algorithms import (gradient_descent, get_points)
+from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algorithm)
 
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
                             AckleyFunction)
@@ -94,13 +94,34 @@ class AlgorithmMenu(QVBoxLayout):
         self.lineEdit_iterations.textChanged[str].connect(self.iter_alg)
         self.label_iterations.setBuddy(self.lineEdit_iterations)
 
-        # ----------------- Delay ----------------- #
+        # ЗАДЕРЖКА ВЫВОДА ТОЧЕК
         self.label_delay = QLabel('&Задержка')
         self.label_delay.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lineEdit_delay = QLineEdit('0.5')
+        self.lineEdit_delay = QLineEdit('1')
         self.lineEdit_delay.textChanged[str].connect(self.delay_alg)
         self.label_delay.setBuddy(self.lineEdit_delay)
 
+        # РАЗМЕР ПОПУЛЯЦИЙ
+        self.label_population_size = QLabel('&Размер популяций')
+        self.label_population_size.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEdit_population_size = QLineEdit('50')
+        self.lineEdit_population_size.textChanged[str].connect(self.iter_alg)
+        self.label_population_size.setBuddy(self.lineEdit_population_size)
+
+        self.label_population_size.setDisabled(True)
+        self.lineEdit_population_size.setDisabled(True)
+
+        # КОЛИЧЕСТВО ПОКОЛЕНИЙ
+        self.label_num_generations = QLabel('&Количество поколений')
+        self.label_num_generations.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lineEdit_num_generations = QLineEdit('100')
+        self.lineEdit_num_generations.textChanged[str].connect(self.delay_alg)
+        self.label_num_generations.setBuddy(self.lineEdit_num_generations)
+
+        self.label_num_generations.setDisabled(True)
+        self.lineEdit_num_generations.setDisabled(True)
+
+        # ----------------- grid ----------------- #
         grid_layout.addWidget(self.label_x, 0, 0)
         grid_layout.addWidget(self.lineEditX, 0, 1)
 
@@ -115,6 +136,12 @@ class AlgorithmMenu(QVBoxLayout):
 
         grid_layout.addWidget(self.label_delay, 4, 0)
         grid_layout.addWidget(self.lineEdit_delay, 4, 1)
+
+        grid_layout.addWidget(self.label_population_size, 5, 0)
+        grid_layout.addWidget(self.lineEdit_population_size, 5, 1)
+
+        grid_layout.addWidget(self.label_num_generations, 6, 0)
+        grid_layout.addWidget(self.lineEdit_num_generations, 6, 1)
 
         self.addLayout(grid_layout)
 
@@ -175,15 +202,34 @@ class AlgorithmMenu(QVBoxLayout):
     # Функция обрабатывающая изменения в строке алгоритмов (Steps)
     def step_alg(self):
         input_text = self.lineEdit_first_step.text()
-        clear = self.process_input_text(input_text)
+        clear = self.process_input_text(input_text).replace('-', '')
+        # Тут еще дописать обработку надо (или переделать 'process_input_text')
+        if clear[0] == '0':
+            clear = clear[:1]+'.'+clear[1:]
         print('Начальный шаг: ' + str(clear))
         return float(clear)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Iterations)
     def iter_alg(self):
         input_text = self.lineEdit_iterations.text()
-        clear = self.process_input_text(input_text)
+        clear = self.process_input_text(input_text).replace('-', '')
         print('Число итераций: ' + str(clear))
+        return int(clear)
+
+    # Функция обрабатывающая изменения в строке размерности популяции (Population_size)
+    def population_size_alg(self):
+        input_text = self.lineEdit_population_size.text()
+        clear = self.process_input_text(input_text).replace('-', '')
+        print('Размерность популяции: ' + str(clear))
+
+        return int(clear)
+
+    # Функция обрабатывающая изменения в строке количества поколений (Num_generations)
+    def num_generations_alg(self):
+        input_text = self.lineEdit_num_generations.text()
+        clear = self.process_input_text(input_text).replace('-', '')
+        print('Количества поколений: ' + str(clear))
+
         return int(clear)
 
     def process_input_text(self, input_text):
@@ -210,11 +256,13 @@ class AlgorithmMenu(QVBoxLayout):
         if self.process is None:  # Если текущего процесса нет.
             # data = self.collect_data()
 
-            delay = self.delay_alg() * 1000
+            delay = int(self.delay_alg() * 1000)
             x = self.x_alg()
             y = self.y_alg()
             tk = self.step_alg()  # Начальный шаг
             M = self.iter_alg()  # Количество итераций
+            population_size = self.population_size_alg()
+            num_generations = self.num_generations_alg()
             alg_name = self.choose_algorithm.currentText()  # Название текущего алгоритма
 
             self.message(f"Выполнение алготима: {alg_name}.")
@@ -222,12 +270,26 @@ class AlgorithmMenu(QVBoxLayout):
 
             if alg_name == "Градиентный спуск":
                 result = gradient_descent(self.functions_dict[self.function], x, y, tk, M)
+                print(result)
             elif alg_name == "Квадратичное программирование":
                 result = get_points(x, y)
             elif alg_name == "Функция Розенброкка":
-                result = None
+                # Запуск генетического алгоритма
+                best_solution, best_fitness, arr_points = genetic_algorithm(population_size, num_generations)
+                print("Оптимальное значение функции Розенброка:", best_fitness)
+                print("Оптимальные значения переменных:")
+                print("x =", best_solution[0])
+                print("y =", best_solution[1])
+                print(arr_points)
+
+                result = arr_points
             elif alg_name == "Рой частиц":
-                result = None
+                a = Swarm(650, 0.1, 1, 5, 100, self.functions_dict[self.function], -5, 5)
+                points = a.startSwarm()
+
+                print("РЕЗУЛЬТАТ:", a.globalBestScore, "В ТОЧКЕ:", a.globalBestPos)
+                print(points)
+                result = points
             elif alg_name == "Пчелиная оптимизация":
                 result = None
             elif alg_name == "Искусственная имунная сеть":
@@ -237,7 +299,6 @@ class AlgorithmMenu(QVBoxLayout):
             elif alg_name == "Гибридный алгоритм":
                 result = None
 
-            print(result)
             self.points.emit(result, delay)
 
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
@@ -252,35 +313,3 @@ class AlgorithmMenu(QVBoxLayout):
     @pyqtSlot(str)
     def change_func(self, name):
         self.function = name
-
-    # @pyqtSlot(list)
-    # def collect_data(self, data=None):
-    #     print(data)
-    #     if data is None:
-    #         data = ['-1', '-1', '0.5', '100']
-    #
-    #     delay = self.delay_alg()
-    #
-    #     x = data[0]
-    #     y = data[1]
-    #     tk = data[2]  # Начальный шаг
-    #     M = data[3]  # Количество итераций
-    #     alg_name = self.choose_algorithm.currentText()  # Название текущего алгоритма
-    #
-    #     if alg_name == "Градиентный спуск":
-    #         # return gradient_descent(function, x, y, tk, M)
-    #         return alg_name
-    #     elif alg_name == "Квадратичное программирование":
-    #         return alg_name
-    #     elif alg_name == "Функция Розенброкка":
-    #         return alg_name
-    #     elif alg_name == "Рой частиц":
-    #         return alg_name
-    #     elif alg_name == "Пчелиная оптимизация":
-    #         return alg_name
-    #     elif alg_name == "Искусственная имунная сеть":
-    #         return
-    #     elif alg_name == "Бактериальная оптимизация":
-    #         return
-    #     elif alg_name == "Гибридный алгоритм":
-    #         return
