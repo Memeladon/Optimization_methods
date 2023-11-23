@@ -95,5 +95,5 @@ def get_points(start_x, start_y):
     return points
 
 
-points = get_points(10, 2)
+# points = get_points(10, 2)
 # print(points)

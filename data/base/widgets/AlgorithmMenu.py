@@ -19,7 +19,7 @@ class AlgorithmMenu(QVBoxLayout):
         self.math_layout = math_layout
         #
         # # ---------------- ComboBox ---------------- #
-        algorithms = ["Градиентный спуск", "Квадратичное программирование", "Функция Розенброкка",
+        algorithms = ["Градиентный спуск", "Квадратичное программирование", "Генетический алгоритм",
                       "Рой частиц", "Пчелиная оптимизация", "Искусственная имунная сеть",
                       "Бактериальная оптимизация", "Гибридный алгоритм"]
         self.choose_algorithm = QComboBox()
@@ -288,14 +288,14 @@ class AlgorithmMenu(QVBoxLayout):
                 print(result)
             elif alg_name == "Квадратичное программирование":
                 result = get_points(x, y)
-            elif alg_name == "Функция Розенброкка":
+            elif alg_name == "Генетический алгоритм":
                 # Запуск генетического алгоритма
-                best_solution, best_fitness, arr_points = genetic_algorithm(population_size, num_generations)
-                print("Оптимальное значение функции Розенброка:", best_fitness)
-                print("Оптимальные значения переменных:")
-                print("x =", best_solution[0])
-                print("y =", best_solution[1])
-                print(arr_points)
+                best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function], population_size, num_generations)
+                # print("Оптимальное значение генетического алгоритма:", best_fitness)
+                # print("Оптимальные значения переменных:")
+                # print("x =", best_solution[0])
+                # print("y =", best_solution[1])
+                # print(arr_points)
 
                 result = arr_points
             elif alg_name == "Рой частиц":

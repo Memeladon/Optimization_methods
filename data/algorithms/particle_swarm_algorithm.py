@@ -140,16 +140,4 @@ class Swarm:
             points.append(self.f(x, y))
         return points
 
-    @staticmethod
-    def Rosenbrock(x, y):
-        return (1 - x) ** 2 + 100 * (y - x ** 2) ** 2
-
-    @staticmethod
-    def func(x, y):
-        return x ** 2 + y ** 2
-
-    @staticmethod
-    def func_ROMA(x, y):
-        return 3 * x * y - x ** 2 * y - x * y ** 2
-
 
