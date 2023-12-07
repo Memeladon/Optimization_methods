@@ -5,7 +5,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 from data.functions import (holder_table_function, himmelblau, sphere_function, mathias_function, izoma_function,
-                            ackley_function)
+                            ackley_function, rozenbroke)
 
 
 class MplCanvas(FigureCanvas):
@@ -81,6 +81,11 @@ class MathLayout(QVBoxLayout):
             self.canvas.draw()
         elif selected_function == 5:
             X, Y, Z = holder_table_function(x_intervals, y_intervals, scale)
+            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
+            print('holder_table_function')
+            self.canvas.draw()
+        elif selected_function == 6:
+            X, Y, Z = rozenbroke(x_intervals, y_intervals, scale)
             self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
             print('holder_table_function')
             self.canvas.draw()

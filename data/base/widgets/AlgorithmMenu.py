@@ -4,9 +4,9 @@ from PyQt6.QtCore import QProcess, pyqtSignal, pyqtSlot, Qt
 from PyQt6.QtWidgets import (QVBoxLayout, QComboBox, QPushButton, QPlainTextEdit, QLabel,
                              QLineEdit, QGridLayout)
 
-from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algorithm)
+from data.algorithms import (gradient_descent, quadratic_programming, Swarm, genetic_algorithm)
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
-                            AckleyFunction)
+                            AckleyFunction, Rozenbroke)
 
 
 class AlgorithmMenu(QVBoxLayout):
@@ -34,6 +34,7 @@ class AlgorithmMenu(QVBoxLayout):
             "Функция Изома": IzomaFunction.objective,
             "Функция Экли": AckleyFunction.objective,
             "Табличная функция Хольдера": HolderTableFunction.objective,
+            "Функция Розенброка": HolderTableFunction.objective,
         }
 
         # # Словарь слоев
@@ -280,14 +281,14 @@ class AlgorithmMenu(QVBoxLayout):
             num_generations = self.num_generations_alg()
             alg_name = self.choose_algorithm.currentText()  # Название текущего алгоритма
 
-            self.message(f"Выполнение алготима: {alg_name}.")
+            self.message(f"Выполнение алгоритма: {alg_name}.")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
 
             if alg_name == "Градиентный спуск":
                 result = gradient_descent(self.functions_dict[self.function], x, y, tk, M)
                 print(result)
             elif alg_name == "Квадратичное программирование":
-                result = get_points(x, y)
+                result = quadratic_programming.simplex_method(x, y)
             elif alg_name == "Генетический алгоритм":
                 # Запуск генетического алгоритма
                 best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function], population_size, num_generations)
@@ -317,6 +318,7 @@ class AlgorithmMenu(QVBoxLayout):
                 result = None
 
             self.message('x, y, z')
+
             self.points.emit(result, delay, self.message)
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
             self.process_finished()
