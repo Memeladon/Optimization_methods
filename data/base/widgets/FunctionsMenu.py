@@ -12,7 +12,7 @@ class FunctionsMenu(QVBoxLayout):
 
         # ---------------- ComboBox ---------------- #
         methods = ["Функция Химмельблау", "Функция сферы", "Функция Матьяса", "Функция Изома", "Функция Экли",
-                   "Табличная функция Хольдера"]
+                   "Табличная функция Хольдера", "Функция Розенброка"]
         self.choose_methods = QComboBox()
         self.choose_methods.addItems(methods)
         self.choose_methods.currentTextChanged.connect(self.function_changed)
@@ -126,6 +126,9 @@ class FunctionsMenu(QVBoxLayout):
         if name == 'Табличная функция Хольдера' or 'Функция Экли':
             self.lineEditX.setText('(-10;10)')
             self.lineEditY.setText('(-10;10)')
+        elif name == 'Функция Розенброка':
+            self.lineEditX.setText('(-1;1)')
+            self.lineEditY.setText('(-1;1)')
         else:
             self.lineEditX.setText('(-5;5)')
             self.lineEditY.setText('(-5;5)')

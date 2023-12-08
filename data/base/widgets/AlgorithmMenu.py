@@ -4,8 +4,7 @@ from PyQt6.QtCore import QProcess, pyqtSignal, pyqtSlot, Qt
 from PyQt6.QtWidgets import (QVBoxLayout, QComboBox, QPushButton, QPlainTextEdit, QLabel,
                              QLineEdit, QGridLayout)
 
-from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algorithm, algorithm_of_bees,
-                             algorithm_artificial_immune_system, algorithm_is_bacterial)
+from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algorithm)
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
                             AckleyFunction)
 
@@ -291,8 +290,7 @@ class AlgorithmMenu(QVBoxLayout):
                 result = get_points(x, y)
             elif alg_name == "Генетический алгоритм":
                 # Запуск генетического алгоритма
-                best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function],
-                                                                            population_size, num_generations)
+                best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function], population_size, num_generations)
                 # print("Оптимальное значение генетического алгоритма:", best_fitness)
                 # print("Оптимальные значения переменных:")
                 # print("x =", best_solution[0])
@@ -310,27 +308,11 @@ class AlgorithmMenu(QVBoxLayout):
                 result = points
 
             elif alg_name == "Пчелиная оптимизация":
-                best_points, result = algorithm_of_bees(-10, 10, -10, 10, population_size,
-                                                   self.functions_dict[self.function], 200)
-                # for i in range(len(result)):
-                #     print("5 лучших точек на " + str(i + 1) + "-ой итерации")
-                #     print(result[i])
-
+                result = None
             elif alg_name == "Искусственная имунная сеть":
-                best_point, result = algorithm_artificial_immune_system(-10, 10, -10, 10, 200,
-                                                                        self.functions_dict[self.function], 500)
-                for i in range(len(result)):
-                    print("Лучшая точка на " + str(i + 1) + "-ой итерации")
-                    print(result[i])
-                print("Лучшее решение (x, y):", best_point)
-
+                result = None
             elif alg_name == "Бактериальная оптимизация":
-                points, bestPoint = algorithm_is_bacterial(-10, 10, -10, 5, 100,
-                                                           self.functions_dict[self.function], 1000, 0.1)
-                for i in points:
-                    print(i)
-                print("Лучшая точка: " + str(bestPoint))
-
+                result = None
             elif alg_name == "Гибридный алгоритм":
                 result = None
 

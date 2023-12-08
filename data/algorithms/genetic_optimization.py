@@ -18,10 +18,19 @@ def compute_fitness(func, population):
 
 
 # Селекция (выбор лучших особей)
-def select_best_individuals(population, fitness_scores, num_parents):
-    selected_indices = sorted(range(len(fitness_scores)), key=lambda i: fitness_scores[i])[:num_parents]
-    return [population[i] for i in selected_indices]
+# def select_best_individuals(population, fitness_scores, num_parents):
+#     selected_indices = sorted(range(len(fitness_scores)), key=lambda i: fitness_scores[i])[:num_parents]
+#     return [population[i] for i in selected_indices]
 
+# Селекция турнирным методом (выбор лучших особей)
+def select_best_individuals_tournament(population, fitness_scores, num_parents, tournament_size=2):
+    selected_indices = []
+    for parent in range(num_parents):
+        tournament_indices = random.sample(range(len(fitness_scores)), tournament_size)
+        tournament_fitness = [fitness_scores[i] for i in tournament_indices]
+        winner_index = tournament_indices[tournament_fitness.index(min(tournament_fitness))]
+        selected_indices.append(winner_index)
+    return [population[i] for i in selected_indices]
 
 # Скрещивание (кроссовер)
 def crossover(parents, offspring_size):
@@ -53,7 +62,8 @@ def genetic_algorithm(func, population_size, num_generations):
     population_list = []
     for generation in range(num_generations):
         fitness_scores = compute_fitness(func, population)
-        parents = select_best_individuals(population, fitness_scores, population_size // 2)
+        # parents = select_best_individuals(population, fitness_scores, population_size // 2)
+        parents = select_best_individuals_tournament(population, fitness_scores, population_size // 2)
         offspring = crossover(parents, population_size - len(parents))
         mutated_offspring = mutate(offspring)
         population = parents + mutated_offspring
