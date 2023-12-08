@@ -1,6 +1,5 @@
 import random
 import math
-from functions import *
 
 # Определение функции аффинности (минимизация функции Розенброка)
 def algorithm_artificial_immune_system(min_x,max_x,min_y,max_y,population_size,function,generations):
@@ -42,8 +41,3 @@ def algorithm_artificial_immune_system(min_x,max_x,min_y,max_y,population_size,f
     return (best_solution[0],best_solution[1],function(best_solution[0], best_solution[1])), history_best_point
 
 
-best_point,points = algorithm_artificial_immune_system(-10,10,-10,10,200,Rosenbrock,500)
-for i in range(len(points)):
-    print("Лучшая точка на "+str(i+1)+"-ой итерации")
-    print(points[i])
-print("Лучшее решение (x, y):", best_point)

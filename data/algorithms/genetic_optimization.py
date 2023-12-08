@@ -3,11 +3,6 @@
 import random
 
 
-# Определение функции Розенброка
-def rosenbrock(x, y):
-    return (1 - x) ** 2 + 100 * (y - x ** 2) ** 2
-
-
 # Создание начальной популяции
 def create_population(population_size):
     return [(random.uniform(-5, 5), random.uniform(-5, 5)) for _ in range(population_size)]
