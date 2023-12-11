@@ -304,7 +304,6 @@ class AlgorithmMenu(QVBoxLayout):
             population_size = self.population_size_alg()
             num_generations = self.num_generations_alg()
             alg_name = self.choose_algorithm.currentText()  # Название текущего алгоритма
-            result = []
 
             self.message(f"Выполнение алготима: {alg_name}.")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
@@ -318,12 +317,6 @@ class AlgorithmMenu(QVBoxLayout):
                 # Запуск генетического алгоритма
                 best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function],
                                                                             population_size, num_generations)
-                # print("Оптимальное значение генетического алгоритма:", best_fitness)
-                # print("Оптимальные значения переменных:")
-                # print("x =", best_solution[0])
-                # print("y =", best_solution[1])
-                # print(arr_points)
-
                 result = arr_points
             elif alg_name == "Рой частиц":
                 a = Swarm(population_size, 0.1, 1, 5, num_generations,
@@ -334,40 +327,29 @@ class AlgorithmMenu(QVBoxLayout):
                 print(result)
 
             elif alg_name == "Пчелиная оптимизация":
-                best_points, result = algorithm_of_bees(-10, 10, -10, 10, population_size,
+                result, bestPoints = algorithm_of_bees(-10, 10, -10, 10, population_size,
                                                         self.functions_dict[self.function], 200)
-                # for i in range(len(result)):
-                #     print("5 лучших точек на " + str(i + 1) + "-ой итерации")
-                #     print(result[i])
+                print(result)
 
             elif alg_name == "Искусственная имунная сеть":
                 best_point, result = algorithm_artificial_immune_system(-10, 10, -10, 10, population_size,
                                                                         self.functions_dict[self.function],
                                                                         num_generations)
-                for i in range(len(result)):
-                    print("Лучшая точка на " + str(i + 1) + "-ой итерации")
-                    print(result[i])
-                print("Лучшее решение (x, y):", best_point)
 
             elif alg_name == "Бактериальная оптимизация":
                 history, bestPoint = algorithm_is_bacterial(-10, 10, -10, 5, population_size,
                                                             self.functions_dict[self.function], 200, 0.1)
-                # for i in result:
-                #     print(i)
-                # print("Лучшая точка: " + str(bestPoint))
+                result = []
                 for item in history:
                     result += item[0], item[1], item[2]
-
                 print(result)
 
             elif alg_name == "Гибридный алгоритм":
                 points, bestPoint = gibrid(population_size, num_generations, self.functions_dict[self.function])
 
+                result = []
                 for item in points:
                     result += item[0], item[1], item[2]
-                for i in result:
-                    print(i)
-                print("Лучшая точка: " + str(bestPoint))
 
             self.message('x, y, z')
             self.points.emit(result, delay, self.message)
