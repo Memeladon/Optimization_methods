@@ -123,14 +123,22 @@ class FunctionsMenu(QVBoxLayout):
         self.update_canvas_button()
 
     def function_changed(self, name):
-        if name == 'Табличная функция Хольдера' or 'Функция Экли':
-            self.lineEditX.setText('(-10;10)')
-            self.lineEditY.setText('(-10;10)')
-        elif name == 'Функция Розенброка':
+        if name == 'Функция Розенброка':
             self.lineEditX.setText('(-1;1)')
             self.lineEditY.setText('(-1;1)')
-        else:
+        elif name == 'Функция Химмельблау':
             self.lineEditX.setText('(-5;5)')
             self.lineEditY.setText('(-5;5)')
-
+        elif name == 'Функция сферы':
+            self.lineEditX.setText('(-5;5)')
+            self.lineEditY.setText('(-5;5)')
+        elif name == 'Функция Матьяса':
+            self.lineEditX.setText('(-5;5)')
+            self.lineEditY.setText('(-5;5)')
+        elif name == 'Табличная функция Хольдера':
+            self.lineEditX.setText('(-10;10)')
+            self.lineEditY.setText('(-10;10)')
+        elif name == 'Функция Экли':
+            self.lineEditX.setText('(-10;10)')
+            self.lineEditY.setText('(-10;10)')
         self.func_name.emit(name)

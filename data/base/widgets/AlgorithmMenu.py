@@ -8,19 +8,19 @@ from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algori
                              algorithm_artificial_immune_system, algorithm_is_bacterial)
 from data.algorithms.hybrid_optimization_algorithm.hybrid import gibrid
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
-                            AckleyFunction)
+                            AckleyFunction, Rozenbroke)
 
 
 class AlgorithmMenu(QVBoxLayout):
     data_changed = pyqtSignal(list)
-    points = pyqtSignal(list, float, object)
+    points = pyqtSignal(list, float, object, object)
     function = 'Функция Химмельблау'
 
     def __init__(self, math_layout):
         super(AlgorithmMenu, self).__init__()
         self.math_layout = math_layout
-        #
-        # # ---------------- ComboBox ---------------- #
+
+        # ---------------- ComboBox ---------------- #
         algorithms = ["Градиентный спуск", "Квадратичное программирование", "Генетический алгоритм",
                       "Рой частиц", "Пчелиная оптимизация", "Искусственная имунная сеть",
                       "Бактериальная оптимизация", "Гибридный алгоритм"]
@@ -36,31 +36,8 @@ class AlgorithmMenu(QVBoxLayout):
             "Функция Изома": IzomaFunction.objective,
             "Функция Экли": AckleyFunction.objective,
             "Табличная функция Хольдера": HolderTableFunction.objective,
+            "Функция Розенброка": Rozenbroke.objective
         }
-
-        # # Словарь слоев
-        # self.layout_dict = {
-        #     "Градиентный спуск": Gradient_descent.Gradient_descent(),
-        #     "Квадратичное программирование": Quadratic_programming.Quadratic_programming(),
-        #     "Функция Розенброкка": Rosenbrock_function.Rosenbrock_function(),
-        #     "Рой частиц": Swarm_of_particles.Swarm_of_particles(),
-        #     "Пчелиная оптимизация": Bee_optimization.Bee_optimization(),
-        #     "Искусственная имунная сеть": Artificial_immune_network.Artificial_immune_network(),
-        #     "Бактериальная оптимизация": Bacterial_optimization.Bacterial_optimization(),
-        #     "Гибридный алгоритм": Hybrid_algorithm.Hybrid_algorithm()
-        # }
-
-        # # ----------------- Labels ----------------- #
-
-        # self.stacked_layout = QStackedLayout()
-
-        # # QStackedLayout управляет виджетами, а не макетами напрямую;
-        # for layout in self.layout_dict.values():
-        #     widget = QWidget()
-        #     widget.setLayout(layout)
-        #     self.stacked_layout.addWidget(widget)
-
-        # self.addLayout(self.stacked_layout)
 
         grid_layout = QGridLayout()
 
@@ -157,22 +134,6 @@ class AlgorithmMenu(QVBoxLayout):
         self.console = QPlainTextEdit()
         self.console.setReadOnly(True)
         self.addWidget(self.console)
-
-        # self.layout_dict["Градиентный спуск"].data_out.connect(self.collect_data)
-
-    # Функция обрабатывающая выбор алгоритмов
-    # def algorithm_changed(self, index):  # i is an int
-    #     # print('changed to ' + str(index))
-    #     algorithm_name = self.choose_algorithm.itemText(index)
-    #     layout = self.layout_dict.get(algorithm_name)
-    #
-    #     # Получим индекс виджета, который содержит необходимый layout (макет)
-    #     if layout:
-    #         index_widget = self.stacked_layout.indexOf(layout.parentWidget())
-    #         self.stacked_layout.setCurrentIndex(index_widget)
-    #     else:
-    #         print("Реализация алгоритма не найдена!")
-    #     # if index == 0:
 
     def algorithm_changed(self, index):
         print(index)
@@ -310,39 +271,35 @@ class AlgorithmMenu(QVBoxLayout):
 
             if alg_name == "Градиентный спуск":
                 result = gradient_descent(self.functions_dict[self.function], x, y, tk, M)
-                print(result)
+
             elif alg_name == "Квадратичное программирование":
                 result = get_points(x, y)
+
             elif alg_name == "Генетический алгоритм":
                 # Запуск генетического алгоритма
                 best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function],
                                                                             population_size, num_generations)
                 result = arr_points
+
             elif alg_name == "Рой частиц":
                 a = Swarm(population_size, 0.1, 1, 5, num_generations,
                           self.functions_dict[self.function], -5, 5)
                 result = a.startSwarm()
 
-                print("РЕЗУЛЬТАТ:", a.globalBestScore, "В ТОЧКЕ:", a.globalBestPos)
-                print(result)
-
             elif alg_name == "Пчелиная оптимизация":
                 result, bestPoints = algorithm_of_bees(-10, 10, -10, 10, population_size,
-                                                        self.functions_dict[self.function], 200)
-                print(result)
+                                                       self.functions_dict[self.function], 200)
 
             elif alg_name == "Искусственная имунная сеть":
                 best_point, result = algorithm_artificial_immune_system(-10, 10, -10, 10, population_size,
                                                                         self.functions_dict[self.function],
                                                                         num_generations)
-
             elif alg_name == "Бактериальная оптимизация":
                 history, bestPoint = algorithm_is_bacterial(-10, 10, -10, 5, population_size,
                                                             self.functions_dict[self.function], 200, 0.1)
                 result = []
                 for item in history:
                     result += item[0], item[1], item[2]
-                print(result)
 
             elif alg_name == "Гибридный алгоритм":
                 points, bestPoint = gibrid(population_size, num_generations, self.functions_dict[self.function])
@@ -352,7 +309,7 @@ class AlgorithmMenu(QVBoxLayout):
                     result += item[0], item[1], item[2]
 
             self.message('x, y, z')
-            self.points.emit(result, delay, self.message)
+            self.points.emit(result, delay, self.message, self.stop_process)
             self.process.finished.connect(self.process_finished)  # Очистка процесса.
             self.process_finished()
 
@@ -363,6 +320,8 @@ class AlgorithmMenu(QVBoxLayout):
         if self.process is not None and self.process.state() == QProcess.Running:
             self.process.kill()
             self.message("Процесс остановлен.")
+            print('Stopped')
+            return False
 
     @pyqtSlot(str)
     def change_func(self, name):

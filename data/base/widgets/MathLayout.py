@@ -1,4 +1,3 @@
-import numpy as np
 from PyQt6.QtCore import pyqtSlot, QTimer
 from PyQt6.QtWidgets import QVBoxLayout
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -22,19 +21,6 @@ class MplCanvas(FigureCanvas):
         self.pressed = False
         self.lastx = None
         self.lasty = None
-    #
-    # def on_scroll(self, event):
-    #     print(event.button, event.step)
-    #     increment = 1 if event.button == 'up' else -1
-    #     max_index = self.X.shape[-1] - 1
-    #     self.index = np.clip(self.index + increment, 0, max_index)
-    #     self.update()
-    #
-    # def update(self):
-    #     self.im.set_data(self.X[:, :, self.index])
-    #     self.ax.set_title(
-    #         f'Use scroll wheel to navigate\nindex {self.index}')
-    #     self.im.axes.figure.canvas.draw()
 
 
 class MathLayout(QVBoxLayout):
@@ -81,13 +67,13 @@ class MathLayout(QVBoxLayout):
             self.canvas.draw()
         elif selected_function == 5:
             X, Y, Z = holder_table_function(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
+            self.canvas.ax.plot_surface(X, Y, Z - 1, cmap='jet', alpha=0.5)
             print('holder_table_function')
             self.canvas.draw()
         elif selected_function == 6:
             X, Y, Z = rozenbroke(x_intervals, y_intervals, scale)
-            self.canvas.ax.plot_surface(X, Y, Z, cmap='jet', alpha=0.5)
-            print('holder_table_function')
+            self.canvas.ax.plot_surface(X, Y, Z - 1, cmap='jet', alpha=0.5)
+            print('rozenbroke')
             self.canvas.draw()
         else:
             print('Выход за предел выбора функции')
@@ -98,12 +84,13 @@ class MathLayout(QVBoxLayout):
     def stop_timer(self):
         self.timer.stop()
 
-    @pyqtSlot(list, float, object)
-    def plot_points(self, result, delay, message):
+    @pyqtSlot(list, float, object, object)
+    def plot_points(self, result, delay, message, stop):
         self.points_to_plot = result
         self.index = 0
         self.interval = int(delay)
         self.console = message
+        self.stop = stop
 
         self.start_timer()
 
