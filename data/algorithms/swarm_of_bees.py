@@ -79,7 +79,7 @@ def algorithm_of_bees(min_x, max_x, min_y, max_y, number_of_bees, function, time
         # Отсортируем еновые точки
         sort_scout_bees = sorted(new_scout_beens, key=lambda x: x[1])
 
-    return best_point, history_best_point
+    return history_best_point, best_point
 
 
 

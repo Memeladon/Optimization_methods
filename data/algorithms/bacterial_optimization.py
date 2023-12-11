@@ -88,7 +88,7 @@ def get_history_best_points(colonyBacteria):
     last_points = [bacteria.arr_move[-1] for bacteria in sortColony]
     points = []
     for i in range(len(last_points)):
-        points.append((last_points[i][0], last_points[i][1], sortColony[i].arr_fitness[-1]))
+        points.append([last_points[i][0], last_points[i][1], sortColony[i].arr_fitness[-1]])
 
     return points
 
@@ -106,15 +106,14 @@ def algorithm_is_bacterial(min_x, max_x, min_y, max_y, number_of_bacteria, funct
     l = 0.2
 
     history_best_points = []
-    bestPoint = (
-    colonyBacteria[0].arr_move[0][-1], colonyBacteria[0].arr_move[0][-1], colonyBacteria[0].arr_fitness[-1])
+    bestPoint = [colonyBacteria[0].arr_move[0][-1], colonyBacteria[0].arr_move[0][-1], colonyBacteria[0].arr_fitness[-1]]
 
     for i in range(time):
         # Проводим процедуру хемотаксиса
         for bacteria in range(number_of_bacteria):
             if i % 10 == 0:
                 l = l / 100 * 90
-            colonyBacteria[bacteria] = chemotaxis(colonyBacteria[bacteria], l, func)
+            colonyBacteria[bacteria] = chemotaxis(colonyBacteria[bacteria], l, function)
 
         # Сортируем бактерии в порядке уменьшея общего здоровья каждой бактерии
         sortColonyBacteria = sorted(colonyBacteria, key=lambda x: x.health())
@@ -129,10 +128,9 @@ def algorithm_is_bacterial(min_x, max_x, min_y, max_y, number_of_bacteria, funct
         # Вывод точек на экран
         last_points = get_history_best_points(colonyBacteria)
         history_best_points.append(last_points[0:5])
-        if (bestPoint[2] > last_points[0][2]):
+        if bestPoint[2] > last_points[0][2]:
             bestPoint = last_points[0]
-            print(str(bestPoint))
-        # print(last_points)
+            # print(bestPoint)
 
     return history_best_points, bestPoint
 

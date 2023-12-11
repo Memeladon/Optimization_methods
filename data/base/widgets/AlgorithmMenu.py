@@ -175,13 +175,22 @@ class AlgorithmMenu(QVBoxLayout):
 
     def algorithm_changed(self, index):
         print(index)
-        if index == 3:
-            self.label_num_generations.setDisabled(False)
-            self.lineEdit_num_generations.setDisabled(False)
+        if index == 4 or index == 6:
+            self.label_num_generations.setDisabled(True)
+            self.lineEdit_num_generations.setDisabled(True)
 
             self.label_population_size.setDisabled(False)
             self.lineEdit_population_size.setDisabled(False)
-        elif index == 2:
+            self.lineEdit_population_size.setText('100')
+        elif index == 5:
+            self.label_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setText('200')
+
+            self.label_population_size.setDisabled(False)
+            self.lineEdit_population_size.setDisabled(False)
+            self.lineEdit_population_size.setText('100')
+        elif index > 1:
             self.label_num_generations.setDisabled(False)
             self.lineEdit_num_generations.setDisabled(False)
             self.lineEdit_num_generations.setText('650')
@@ -189,6 +198,12 @@ class AlgorithmMenu(QVBoxLayout):
             self.label_population_size.setDisabled(False)
             self.lineEdit_population_size.setDisabled(False)
             self.lineEdit_population_size.setText('100')
+        else:
+            self.label_num_generations.setDisabled(True)
+            self.lineEdit_num_generations.setDisabled(True)
+
+            self.label_population_size.setDisabled(True)
+            self.lineEdit_population_size.setDisabled(True)
 
     # Функция обрабатывающая изменения в строке алгоритмов (Delay)
     def delay_alg(self):
@@ -220,7 +235,7 @@ class AlgorithmMenu(QVBoxLayout):
         clear = self.process_input_text(input_text).replace('-', '')
         # Тут еще дописать обработку надо (или переделать 'process_input_text')
         if clear[0] == '0':
-            clear = clear[:1]+'.'+clear[1:]
+            clear = clear[:1] + '.' + clear[1:]
         print('Начальный шаг: ' + str(clear))
         return float(clear)
 
@@ -291,7 +306,8 @@ class AlgorithmMenu(QVBoxLayout):
                 result = get_points(x, y)
             elif alg_name == "Генетический алгоритм":
                 # Запуск генетического алгоритма
-                best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function], population_size, num_generations)
+                best_solution, best_fitness, arr_points = genetic_algorithm(self.functions_dict[self.function],
+                                                                            population_size, num_generations)
                 # print("Оптимальное значение генетического алгоритма:", best_fitness)
                 # print("Оптимальные значения переменных:")
                 # print("x =", best_solution[0])
@@ -302,32 +318,39 @@ class AlgorithmMenu(QVBoxLayout):
             elif alg_name == "Рой частиц":
                 a = Swarm(population_size, 0.1, 1, 5, num_generations,
                           self.functions_dict[self.function], -5, 5)
-                points = a.startSwarm()
+                result = a.startSwarm()
 
                 print("РЕЗУЛЬТАТ:", a.globalBestScore, "В ТОЧКЕ:", a.globalBestPos)
-                print(points)
-                result = points
+                print(result)
+
             elif alg_name == "Пчелиная оптимизация":
                 best_points, result = algorithm_of_bees(-10, 10, -10, 10, population_size,
-                                                   self.functions_dict[self.function], 200)
+                                                        self.functions_dict[self.function], 200)
                 # for i in range(len(result)):
                 #     print("5 лучших точек на " + str(i + 1) + "-ой итерации")
                 #     print(result[i])
 
             elif alg_name == "Искусственная имунная сеть":
-                best_point, result = algorithm_artificial_immune_system(-10, 10, -10, 10, 200,
-                                                                        self.functions_dict[self.function], 500)
+                best_point, result = algorithm_artificial_immune_system(-10, 10, -10, 10, population_size,
+                                                                        self.functions_dict[self.function],
+                                                                        num_generations)
                 for i in range(len(result)):
                     print("Лучшая точка на " + str(i + 1) + "-ой итерации")
                     print(result[i])
                 print("Лучшее решение (x, y):", best_point)
 
             elif alg_name == "Бактериальная оптимизация":
-                points, bestPoint = algorithm_is_bacterial(-10, 10, -10, 5, 100,
-                                                           self.functions_dict[self.function], 1000, 0.1)
-                for i in points:
-                    print(i)
-                print("Лучшая точка: " + str(bestPoint))
+                history, bestPoint = algorithm_is_bacterial(-10, 10, -10, 5, population_size,
+                                                            self.functions_dict[self.function], 200, 0.1)
+                result = []
+                # for i in result:
+                #     print(i)
+                # print("Лучшая точка: " + str(bestPoint))
+                for item in history:
+                    result += item[0], item[1], item[2]
+
+                print(result)
+
             elif alg_name == "Гибридный алгоритм":
                 result = None
 
