@@ -5,3 +5,4 @@ from .particle_swarm_algorithm import Swarm
 from .swarm_of_bees import algorithm_of_bees
 from .artificial_immune_system_optimization import algorithm_artificial_immune_system
 from .bacterial_optimization import algorithm_is_bacterial
+from .hybrid_optimization_algorithm.hybrid import gibrid

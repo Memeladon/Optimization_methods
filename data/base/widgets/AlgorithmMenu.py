@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (QVBoxLayout, QComboBox, QPushButton, QPlainTextEdit
 
 from data.algorithms import (gradient_descent, get_points, Swarm, genetic_algorithm, algorithm_of_bees,
                              algorithm_artificial_immune_system, algorithm_is_bacterial)
+from data.algorithms.hybrid_optimization_algorithm.hybrid import gibrid
 from data.functions import (HolderTableFunction, Himmelblau, SphereFunction, MathiasFunction, IzomaFunction,
                             AckleyFunction)
 
@@ -190,6 +191,14 @@ class AlgorithmMenu(QVBoxLayout):
             self.label_population_size.setDisabled(False)
             self.lineEdit_population_size.setDisabled(False)
             self.lineEdit_population_size.setText('100')
+        elif index == 7:
+            self.label_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setDisabled(False)
+            self.lineEdit_num_generations.setText('100')
+
+            self.label_population_size.setDisabled(False)
+            self.lineEdit_population_size.setDisabled(False)
+            self.lineEdit_population_size.setText('100')
         elif index > 1:
             self.label_num_generations.setDisabled(False)
             self.lineEdit_num_generations.setDisabled(False)
@@ -295,6 +304,7 @@ class AlgorithmMenu(QVBoxLayout):
             population_size = self.population_size_alg()
             num_generations = self.num_generations_alg()
             alg_name = self.choose_algorithm.currentText()  # Название текущего алгоритма
+            result = []
 
             self.message(f"Выполнение алготима: {alg_name}.")
             self.process = QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
@@ -342,7 +352,6 @@ class AlgorithmMenu(QVBoxLayout):
             elif alg_name == "Бактериальная оптимизация":
                 history, bestPoint = algorithm_is_bacterial(-10, 10, -10, 5, population_size,
                                                             self.functions_dict[self.function], 200, 0.1)
-                result = []
                 # for i in result:
                 #     print(i)
                 # print("Лучшая точка: " + str(bestPoint))
@@ -352,7 +361,13 @@ class AlgorithmMenu(QVBoxLayout):
                 print(result)
 
             elif alg_name == "Гибридный алгоритм":
-                result = None
+                points, bestPoint = gibrid(population_size, num_generations, self.functions_dict[self.function])
+
+                for item in points:
+                    result += item[0], item[1], item[2]
+                for i in result:
+                    print(i)
+                print("Лучшая точка: " + str(bestPoint))
 
             self.message('x, y, z')
             self.points.emit(result, delay, self.message)

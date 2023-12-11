@@ -1,6 +1,4 @@
 import random
-import math
-from functions import *
 
 
 # Определение функции аффинности (минимизация функции Розенброка)
